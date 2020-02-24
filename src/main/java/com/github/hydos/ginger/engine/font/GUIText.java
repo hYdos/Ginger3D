@@ -255,10 +255,11 @@ public class GUIText {
 	}
 
 	public void setText(String string) {
-		this.remove();
-		this.textString = string;
-		TextMaster.loadText(this);
-		
+		if(string != this.textString) {
+			this.remove();
+			this.textString = string;
+			TextMaster.loadText(this);
+		}
 	}
 
 

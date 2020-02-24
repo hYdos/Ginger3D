@@ -15,7 +15,6 @@ import com.github.hydos.ginger.engine.obj.shapes.StaticCube;
 import com.github.hydos.ginger.engine.particle.*;
 import com.github.hydos.ginger.engine.render.MasterRenderer;
 import com.github.hydos.ginger.engine.render.models.TexturedModel;
-import com.github.hydos.ginger.engine.terrain.*;
 import com.github.hydos.ginger.engine.utils.Loader;
 import com.github.hydos.ginger.main.GingerMain;
 import com.github.hydos.ginger.main.settings.Constants;
@@ -90,7 +89,7 @@ public class Example extends Game{
         FontType font = new FontType(Loader.loadFontAtlas("candara.png"), "candara.fnt");
         
         GUIText text = new GUIText("LiteCraft", 3, font, new Vector2f(0,0), 1f, true);
-        text.setColour(0, 0, 0);        
+        text.setColour(1, 1, 1);        
         		
 		Light sun = new Light(new Vector3f(100,105,-100), new Vector3f(1.3f, 1.3f, 1.3f), new Vector3f(0.0001f, 0.0001f, 0.0001f));
 		data.lights.add(sun);
