@@ -1,5 +1,6 @@
 package com.github.hydos.ginger.engine.font;
 
+import com.github.hydos.ginger.engine.api.GingerRegister;
 import com.github.hydos.ginger.engine.math.vectors.*;
 
 /**
@@ -9,7 +10,7 @@ import com.github.hydos.ginger.engine.math.vectors.*;
  */
 public class GUIText {
 
-	private String textString;
+	public String textString;
 	private float fontSize;
 
 	private int textMeshVao;
@@ -26,6 +27,7 @@ public class GUIText {
 	private FontType font;
 
 	private boolean centerText = false;
+	public String textID = "";
 
 	/**
 	 * Creates a new text, loads the text's quads into a VAO, and adds the text
@@ -61,14 +63,15 @@ public class GUIText {
 		this.outlineColour = colour;
 		this.lineMaxSize = maxLineLength;
 		this.centerText = centered;
-		TextMaster.loadText(this);
+		TextRegister.loadText(this);
 	}
 
 	/**
 	 * Remove the text from the screen.
 	 */
-	public void remove() {
-		TextMaster.removeText(this);
+	void remove() {
+		TextRegister.removeText(this);
+		GingerRegister.getInstance().removeText(this);
 	}
 
 	public void setTextString(String textString) {
@@ -258,7 +261,8 @@ public class GUIText {
 		if(string != this.textString) {
 			this.remove();
 			this.textString = string;
-			TextMaster.loadText(this);
+			TextRegister.loadText(this);
+			GingerRegister.getInstance().registerText(this);
 		}
 	}
 

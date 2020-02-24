@@ -19,7 +19,10 @@ public class TextureButton{
 	
 	private boolean isHovering = false;
 
+	public String resourceLocation;
+
 	public TextureButton(String texture, Vector2f position, Vector2f scale) {
+		resourceLocation = texture;
 		guiTexture = new GuiTexture(Loader.loadTextureDirectly(texture), position, scale);
 	}
 	

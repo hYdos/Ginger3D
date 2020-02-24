@@ -1,14 +1,11 @@
 package com.github.hydos.ginger.engine.font;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.github.hydos.ginger.engine.render.renderers.FontRenderer;
 import com.github.hydos.ginger.engine.utils.Loader;
 
-public class TextMaster {
+public class TextRegister {
 	
 	private static Map<FontType, List<GUIText>> texts = new HashMap<FontType, List<GUIText>>();
 	private static FontRenderer renderer;
