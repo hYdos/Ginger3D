@@ -61,7 +61,6 @@ public class Example extends Game{
 		
 		//TODO: rename entity class to object class because not just entities
 		List<Block> chunk = new ArrayList<Block>();
-        //Basic chunk generation
 		TexturedModel activeModel = dirtModel;
 		for(int k = 0; k<8;k++) {
 			if(k == 7) {
