@@ -14,13 +14,11 @@ import com.github.hydos.ginger.engine.opengl.render.models.GLTexturedModel;
 import com.github.hydos.ginger.engine.opengl.render.shaders.GLStaticShader;
 import com.github.hydos.ginger.engine.opengl.utils.GLLoader;
 
-public class GLBlockRenderer extends Renderer implements WorldGenConstants
-{
+public class GLBlockRenderer extends Renderer implements WorldGenConstants {
 	public GLStaticShader shader;
 	public int atlasID;
 
-	public GLBlockRenderer(GLStaticShader shader, Matrix4f projectionMatrix)
-	{
+	public GLBlockRenderer(GLStaticShader shader, Matrix4f projectionMatrix) {
 		this.shader = shader;
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
@@ -28,39 +26,37 @@ public class GLBlockRenderer extends Renderer implements WorldGenConstants
 		this.atlasID = GLLoader.createBlockAtlas();
 	}
 
-	private void prepBlockInstance(GLRenderObject entity)
-	{
+	private void prepBlockInstance(GLRenderObject entity) {
 		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotX(),
-			entity.getRotY(), entity.getRotZ(), entity.getScale());
+				entity.getRotY(), entity.getRotZ(), entity.getScale());
 		shader.loadTransformationMatrix(transformationMatrix);
 	}
 
-	public void prepareModel(GLTexturedModel model)
-	{
+	public void prepareModel(GLTexturedModel model) {
 		GL30.glBindVertexArray(model.getRawModel().getVaoID());
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
 		GL20.glEnableVertexAttribArray(2);
 	}
 
-	public void unbindModel()
-	{
+	public void unbindModel() {
 		GL20.glDisableVertexAttribArray(0);
 		GL20.glDisableVertexAttribArray(1);
 		GL20.glDisableVertexAttribArray(2);
 		GL30.glBindVertexArray(0);
 	}
 
-	public void enableWireframe()
-	{ if (GingerRegister.getInstance().wireframe)
-		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE); }
+	public void enableWireframe() {
+		if (GingerRegister.getInstance().wireframe)
+			GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+	}
 
-	public void disableWireframe()
-	{ if (GingerRegister.getInstance().wireframe)
-		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL); }
+	public void disableWireframe() {
+		if (GingerRegister.getInstance().wireframe)
+			GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+	}
 
-	public void prepareRender()
-	{
+	public void prepareRender() {
 		// TODO: combine VBOS
 		shader.start();
 		shader.loadSkyColour(Window.getColour());
@@ -72,19 +68,18 @@ public class GLBlockRenderer extends Renderer implements WorldGenConstants
 		enableWireframe();
 	}
 
-	public void render(BlockInstance[] renderList)
-	{
+	public void render(BlockInstance[] renderList) {
 		prepareRender();
 
-        for (BlockInstance entity : renderList) {
-            if (entity != null && entity.getModel() != null)
-            {
-                GLTexturedModel blockModel = (GLTexturedModel) entity.getModel();
-                GL11.glBindTexture(GL11.GL_TEXTURE_2D, blockModel.getTexture().getTextureID());
-                prepBlockInstance(entity);
-                GL11.glDrawElements(GL11.GL_TRIANGLES, blockModel.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
-            }
-        }
+		for (BlockInstance entity : renderList) {
+			if (entity != null && entity.getModel() != null) {
+				GLTexturedModel blockModel = (GLTexturedModel) entity.getModel();
+				GL11.glBindTexture(GL11.GL_TEXTURE_2D, blockModel.getTexture().getTextureID());
+				prepBlockInstance(entity);
+				GL11.glDrawElements(GL11.GL_TRIANGLES, blockModel.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT,
+						0);
+			}
+		}
 //		disableWireframe();
 //		shader.stop();
 	}

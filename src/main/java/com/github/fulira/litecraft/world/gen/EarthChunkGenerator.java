@@ -6,10 +6,8 @@ import com.github.fulira.litecraft.types.block.*;
 import com.github.fulira.litecraft.util.noise.OctaveSimplexNoise;
 import com.github.fulira.litecraft.world.*;
 
-public class EarthChunkGenerator implements ChunkGenerator, WorldGenConstants
-{
-	public EarthChunkGenerator(long seed, int dimension)
-	{
+public class EarthChunkGenerator implements ChunkGenerator, WorldGenConstants {
+	public EarthChunkGenerator(long seed, int dimension) {
 		Random rand = new Random(seed);
 		this.noise = new OctaveSimplexNoise(rand, 3, 250.0, 50.0, 18.0);
 		this.stoneNoise = new OctaveSimplexNoise(rand, 1);
@@ -21,19 +19,16 @@ public class EarthChunkGenerator implements ChunkGenerator, WorldGenConstants
 	private final int dimension;
 
 	@Override
-	public Chunk generateChunk(World world, int chunkX, int chunkY, int chunkZ)
-	{
+	public Chunk generateChunk(World world, int chunkX, int chunkY, int chunkZ) {
 		Chunk chunk = new Chunk(world, chunkX, chunkY, chunkZ, this.dimension);
-		for (int x = 0; x < CHUNK_SIZE; x++)
-		{
+		for (int x = 0; x < CHUNK_SIZE; x++) {
 			double totalX = x + chunk.chunkStartX;
-			for (int z = 0; z < CHUNK_SIZE; z++)
-			{
+			for (int z = 0; z < CHUNK_SIZE; z++) {
 				double totalZ = chunk.chunkStartZ + z;
 				int height = (int) this.noise.sample(totalX, totalZ);
-				for (int y = 0; y < CHUNK_SIZE; y++)
-				{
-					double rockNoise = this.stoneNoise.sample(totalX / 160.0, (chunk.chunkStartY + y) / 50.0, totalZ / 160.0);
+				for (int y = 0; y < CHUNK_SIZE; y++) {
+					double rockNoise = this.stoneNoise.sample(totalX / 160.0, (chunk.chunkStartY + y) / 50.0,
+							totalZ / 160.0);
 					int totalY = chunk.chunkStartY + y;
 					Block block = Blocks.AIR;
 					if (totalY < height - 4)
@@ -49,22 +44,14 @@ public class EarthChunkGenerator implements ChunkGenerator, WorldGenConstants
 		return chunk;
 	}
 
-	private static Block pickStone(double rockNoise)
-	{
-		if (rockNoise < -0.25)
-		{
+	private static Block pickStone(double rockNoise) {
+		if (rockNoise < -0.25) {
 			return Blocks.ANDESITE;
-		}
-		else if (rockNoise < 0)
-		{
+		} else if (rockNoise < 0) {
 			return Blocks.DIORITE;
-		}
-		else if (rockNoise < 0.25)
-		{
+		} else if (rockNoise < 0.25) {
 			return Blocks.GNEISS;
-		}
-		else
-		{
+		} else {
 			return Blocks.GRANITE;
 		}
 	}
