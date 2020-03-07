@@ -11,6 +11,7 @@ import java.nio.*;
 import java.util.*;
 
 import org.lwjgl.PointerBuffer;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.system.*;
 import org.lwjgl.vulkan.*;
 
@@ -846,8 +847,8 @@ public class VKUtils
 		try(MemoryStack stack = stackPush()) {
 
 			UniformBufferObject ubo = new UniformBufferObject();
-
-			ubo.model.rotate((float) (glfwGetTime() * Math.toRadians(90)), 0.0f, 0.0f, 1.0f);
+			if(Window.isKeyDown(GLFW.GLFW_KEY_W))
+				ubo.model.rotate((float) (glfwGetTime() * Math.toRadians(90)), 0.0f, 0.0f, 1.0f);
 			ubo.view.lookAt(2.0f, 2.0f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 			ubo.proj.perspective((float) Math.toRadians(45),
 				(float)VKVariables.swapChainExtent.width() / (float)VKVariables.swapChainExtent.height(), 0.1f, 10.0f);

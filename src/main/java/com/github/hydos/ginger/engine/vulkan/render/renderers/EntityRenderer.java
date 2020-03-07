@@ -62,7 +62,6 @@ public class EntityRenderer extends Renderer
 		for(VKRenderObject entity : entities)
 		{
 			VKBufferMesh mesh = entity.getModel();
-			VKUtils.updateUniformBuffer(VKVariables.currentImageIndex, entity);//TODO: move this to entitiy renderer and update before every entity is drawn
 
 	        LongBuffer vertexBuffers = stack.longs(mesh.vertexBuffer);
 	        LongBuffer offsets = stack.longs(0);

@@ -12,6 +12,7 @@ import org.lwjgl.vulkan.*;
 import com.github.hydos.ginger.VulkanExample;
 import com.github.hydos.ginger.engine.vulkan.VKVariables;
 import com.github.hydos.ginger.engine.vulkan.swapchain.VKSwapchainManager;
+import com.github.hydos.ginger.engine.vulkan.utils.VKUtils;
 
 /**
  * Wraps the needed sync objects for an in flight frame
@@ -75,6 +76,7 @@ public class Frame {
 
 			final int imageIndex = pImageIndex.get(0);
 			VKVariables.currentImageIndex = imageIndex;
+			VKUtils.updateUniformBuffer(VKVariables.currentImageIndex, null);//TODO: move this to entitiy renderer and update before every entity is drawn
 
 			if(VKVariables.imagesInFlight.containsKey(imageIndex)) {
 				vkWaitForFences(VKVariables.device, VKVariables.imagesInFlight.get(imageIndex).fence(), true, VulkanExample.UINT64_MAX);
