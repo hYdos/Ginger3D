@@ -6,7 +6,7 @@ import java.util.*;
 import org.joml.*;
 import org.lwjgl.opengl.*;
 
-import com.github.halotroop.litecraft.render.GLBlockRenderer;
+import com.github.fulira.litecraft.render.GLBlockRenderer;
 import com.github.hydos.ginger.engine.common.api.GingerRegister;
 import com.github.hydos.ginger.engine.common.cameras.Camera;
 import com.github.hydos.ginger.engine.common.elements.GLGuiTexture;

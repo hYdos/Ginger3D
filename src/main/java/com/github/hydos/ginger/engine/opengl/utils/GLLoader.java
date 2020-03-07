@@ -7,7 +7,7 @@ import java.util.*;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 
-import com.github.halotroop.litecraft.types.block.*;
+import com.github.fulira.litecraft.types.block.*;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.opengl.render.models.RawModel;
 import com.github.hydos.ginger.engine.opengl.render.texture.Image;
