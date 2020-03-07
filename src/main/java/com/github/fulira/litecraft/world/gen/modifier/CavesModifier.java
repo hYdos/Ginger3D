@@ -8,13 +8,13 @@ import com.github.fulira.litecraft.world.BlockAccess;
 import com.github.fulira.litecraft.world.gen.WorldGenConstants;
 
 public class CavesModifier implements WorldModifier, WorldGenConstants {
-	private OctaveSimplexNoise caveNoise;
-
 	@Override
 	public void initialize(long seed) {
 		Random rand = new Random(seed);
 		this.caveNoise = new OctaveSimplexNoise(rand, 2, 65.0, 1.0, 1.0);
 	}
+
+	private OctaveSimplexNoise caveNoise;
 
 	@Override
 	public void modifyWorld(BlockAccess world, Random rand, int chunkStartX, int chunkStartY, int chunkStartZ) {
