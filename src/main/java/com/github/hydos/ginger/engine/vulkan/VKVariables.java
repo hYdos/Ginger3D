@@ -71,7 +71,7 @@ public class VKVariables
     public static VKVertex[] vertices; //TODO: remove and properly add model loading
     public static int[] indices;
 
-    public static List<Long> uniformBuffers;
+    public static List<Long> uniformBuffers;//FIXME: may be the answer to all problems
     public static List<Long> uniformBuffersMemory;
 
     public static List<VkCommandBuffer> commandBuffers;
