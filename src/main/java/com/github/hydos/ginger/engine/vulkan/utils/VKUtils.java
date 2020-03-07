@@ -273,7 +273,7 @@ public class VKUtils
 		}
 	}
 
-	public static void createDescriptorSetLayout() {
+	public static void createUBODescriptorSetLayout() {
 
 		try(MemoryStack stack = stackPush()) {
 

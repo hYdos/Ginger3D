@@ -112,7 +112,7 @@ public class VulkanExample {
 		VKTextureManager.createTextureImageView();
 		VKTextureManager.createTextureSampler();
 		loadModel();
-		VKUtils.createDescriptorSetLayout();
+		VKUtils.createUBODescriptorSetLayout();
 		VKSwapchainManager.createSwapChainObjects();
 		VKUtils.createSyncObjects();
 	}
