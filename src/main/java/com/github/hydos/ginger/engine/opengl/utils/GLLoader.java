@@ -7,7 +7,7 @@ import java.util.*;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 
-import com.github.halotroop.litecraft.types.block.*;
+import com.github.fulira.litecraft.types.block.*;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.opengl.render.models.RawModel;
 import com.github.hydos.ginger.engine.opengl.render.texture.Image;
@@ -117,10 +117,10 @@ public class GLLoader
         //Fill the image with blank image data
         GL40.glTexImage2D(GL40.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width*2, height*2, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, (ByteBuffer) null);
         
-        long maxX = Math.round(Math.sqrt(Blocks.blocks.size()));
+        long maxX = Math.round(Math.sqrt(Blocks.BLOCKS.size()));
         int currentX = 0;
         int currentY = 0;
-		for(Block block: Blocks.blocks) {
+		for(Block block: Blocks.BLOCKS) {
 			//just in case
 			
 			if(!block.texture.equals("DONTLOAD")) {

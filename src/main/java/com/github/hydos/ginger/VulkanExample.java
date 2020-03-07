@@ -32,10 +32,8 @@ public class VulkanExample {
 	public static final long UINT64_MAX = 0xFFFFFFFFFFFFFFFFL;
 
 	public static final int MAX_FRAMES_IN_FLIGHT = 2;
-		
+
 	public static final Set<String> DEVICE_EXTENSIONS = Stream.of(VK_KHR_SWAPCHAIN_EXTENSION_NAME).collect(toSet());
-
-
 
 	public static class QueueFamilyIndices {
 
@@ -81,7 +79,7 @@ public class VulkanExample {
 		GingerVK.getInstance().cleanup();
 		VKUtils.cleanup();
 	}
-	
+
 	private void loadModel() {
 
 		File modelFile = new File(ClassLoader.getSystemClassLoader().getResource("models/chalet.obj").getFile());
@@ -119,8 +117,8 @@ public class VulkanExample {
 
 	private void mainLoop() {
 
-		while(!Window.closed()) {
-			if(Window.shouldRender()) {
+		while (!Window.closed()) {
+			if (Window.shouldRender()) {
 				Frame.drawFrame();
 			}
 			glfwPollEvents();
@@ -129,7 +127,6 @@ public class VulkanExample {
 		// Wait for the device to complete all operations before release resources
 		vkDeviceWaitIdle(VKVariables.device);
 	}
-
 
 	public static void main(String[] args) {
 
