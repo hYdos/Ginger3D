@@ -2,7 +2,8 @@ package com.github.fulira.litecraft.world.gen.modifier;
 
 import java.util.Random;
 
-import com.github.fulira.litecraft.types.block.Blocks;
+import com.github.fulira.litecraft.types.block.*;
+import com.github.fulira.litecraft.util.CardinalDirection;
 import com.github.fulira.litecraft.util.noise.OctaveSimplexNoise;
 import com.github.fulira.litecraft.world.BlockAccess;
 import com.github.fulira.litecraft.world.gen.WorldGenConstants;
@@ -74,8 +75,32 @@ public class CavesModifier implements WorldModifier, WorldGenConstants {
 								// calculate whether to replace block with air
 								// if the noise is within the threshold for that block for caves
 								float threshold = world.getBlock(totalX, totalY, totalZ).getCaveCarveThreshold();
+
 								if (-threshold < lerpNoise && lerpNoise < threshold) {
-									world.setBlock(totalX, totalY, totalZ, Blocks.AIR);
+									boolean canGenerate = false;
+
+									// check for air above. if there is air above, check threshold of nearby blocks to try prevent bad holes
+									if (world.getBlock(totalX, totalY + 1, totalZ) == Blocks.AIR) {
+										for (CardinalDirection direction : CardinalDirection.values()) {
+											Block block2 = world.getBlock(totalX + direction.x, totalY, totalZ + direction.z);
+
+											if (block2 == Blocks.AIR) {
+												canGenerate = true;
+											} else {
+												float threshold2 = block2.getCaveCarveThreshold();
+
+												// check threshold of nearby block against the threshold of this position
+												if (-threshold2 < lerpNoise && lerpNoise < threshold2) {
+													canGenerate = true;
+												}
+											}
+
+											if (canGenerate) {
+												world.setBlock(totalX, totalY, totalZ, Blocks.AIR);
+												break;
+											}
+										}
+									}
 								}
 								// add progress to the noise
 								lerpNoise += lerpProg;

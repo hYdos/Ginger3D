@@ -6,5 +6,5 @@ public enum RelativeDirection {
 	LEFT, // >left< right
 	RIGHT, // left >right<
 	FORWARD, // b
-	BACKWARD,// a
+	BACKWARD // a
 }

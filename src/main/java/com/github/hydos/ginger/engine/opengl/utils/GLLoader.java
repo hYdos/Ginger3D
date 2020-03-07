@@ -117,10 +117,10 @@ public class GLLoader
         //Fill the image with blank image data
         GL40.glTexImage2D(GL40.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width*2, height*2, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, (ByteBuffer) null);
         
-        long maxX = Math.round(Math.sqrt(Blocks.blocks.size()));
+        long maxX = Math.round(Math.sqrt(Blocks.BLOCKS.size()));
         int currentX = 0;
         int currentY = 0;
-		for(Block block: Blocks.blocks) {
+		for(Block block: Blocks.BLOCKS) {
 			//just in case
 			
 			if(!block.texture.equals("DONTLOAD")) {

@@ -21,8 +21,10 @@ public class EarthChunkGenerator implements ChunkGenerator, WorldGenConstants {
 	@Override
 	public Chunk generateChunk(World world, int chunkX, int chunkY, int chunkZ) {
 		Chunk chunk = new Chunk(world, chunkX, chunkY, chunkZ, this.dimension);
+
 		for (int x = 0; x < CHUNK_SIZE; x++) {
 			double totalX = x + chunk.chunkStartX;
+
 			for (int z = 0; z < CHUNK_SIZE; z++) {
 				double totalZ = chunk.chunkStartZ + z;
 				int height = (int) this.noise.sample(totalX, totalZ);
