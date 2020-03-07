@@ -80,6 +80,8 @@ public class CavesModifier implements WorldModifier, WorldGenConstants {
 									boolean canGenerate = false;
 
 									// check for air above. if there is air above, check threshold of nearby blocks to try prevent bad holes
+									// inb4 this makes caves generate differently based on how the chunk is loaded
+									// maybe I should change GenerationWorld slightly
 									if (world.getBlock(totalX, totalY + 1, totalZ) == Blocks.AIR) {
 										for (CardinalDirection direction : CardinalDirection.values()) {
 											Block block2 = world.getBlock(totalX + direction.x, totalY, totalZ + direction.z);
@@ -100,6 +102,8 @@ public class CavesModifier implements WorldModifier, WorldGenConstants {
 												break;
 											}
 										}
+									} else { // if it's not an area with air above, no need to check
+										world.setBlock(totalX, totalY, totalZ, Blocks.AIR);
 									}
 								}
 								// add progress to the noise
