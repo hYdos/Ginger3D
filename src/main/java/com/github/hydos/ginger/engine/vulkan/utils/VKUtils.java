@@ -847,9 +847,7 @@ public class VKUtils
 
 			UniformBufferObject ubo = new UniformBufferObject();
 
-//			ubo.model.rotate((float) (glfwGetTime() * Math.toRadians(90)), 0.0f, 0.0f, 1.0f);
-			ubo.model.translate(0, 2, 0);
-			
+			ubo.model.rotate((float) (glfwGetTime() * Math.toRadians(90)), 0.0f, 0.0f, 1.0f);
 			ubo.view.lookAt(2.0f, 2.0f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 			ubo.proj.perspective((float) Math.toRadians(45),
 				(float)VKVariables.swapChainExtent.width() / (float)VKVariables.swapChainExtent.height(), 0.1f, 10.0f);
