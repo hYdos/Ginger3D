@@ -90,8 +90,8 @@ public class VulkanExample {
 	}
 
 	private void initWindow() {
-		Window.create(1200, 800, "Vulkan Ginger2", 60, RenderAPI.Vulkan);
-		glfwSetFramebufferSizeCallback(Window.getWindow(), this::framebufferResizeCallback);
+//		Window.create(1200, 800, "Vulkan Ginger2", 60, RenderAPI.Vulkan);
+//		glfwSetFramebufferSizeCallback(Window.getWindow(), this::framebufferResizeCallback);
 	}
 
 	private void framebufferResizeCallback(long window, int width, int height) {

@@ -109,7 +109,7 @@ public class Chunk implements BlockAccess, WorldGenConstants, SODSerializable {
 							}
 
 						}
-				renderedBlocks = tempList.toArray(BlockInstance[]::new);
+				renderedBlocks = tempList.toArray(new BlockInstance[0]);
 			}
 
 			blockRenderer.prepareRender();

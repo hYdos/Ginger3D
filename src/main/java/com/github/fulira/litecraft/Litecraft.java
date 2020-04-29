@@ -1,5 +1,6 @@
 package com.github.fulira.litecraft;
 
+import net.fabricmc.api.ModInitializer;
 import org.joml.*;
 
 import com.github.fulira.litecraft.save.LitecraftSave;
@@ -25,7 +26,7 @@ import com.github.hydos.ginger.engine.opengl.utils.*;
 
 import tk.valoeghese.gateways.client.io.*;
 
-public class Litecraft extends Game {
+public class Litecraft extends Game implements ModInitializer {
 	// FIXME: search for ((GingerGL)engine) and properly implement both render APIs
 	// when Vulkan is complete.
 
@@ -36,6 +37,14 @@ public class Litecraft extends Game {
 	public int fps, ups, tps;
 	public Vector4i dbgStats = new Vector4i();
 	private long frameTimer;
+
+	@Override
+	public void onInitialize() {
+	}
+
+	public Litecraft(){
+
+	}
 
 	public Litecraft(int windowWidth, int windowHeight, float frameLimit) {
 		Litecraft.INSTANCE = this;
@@ -127,7 +136,7 @@ public class Litecraft extends Game {
 	private void setupGinger(int windowWidth, int windowHeight, float frameCap) {
 		if (engine == null) // Prevents this from being run more than once on accident.
 		{
-			Window.create(windowWidth, windowHeight, "Litecraft", frameCap, RenderAPI.OpenGL); // create window
+//			Window.create(windowWidth, windowHeight, "Litecraft", frameCap, RenderAPI.OpenGL); // create window
 			// set up the gateways keybind key tracking
 			KeyCallbackHandler.trackWindow(Window.getWindow());
 			MouseCallbackHandler.trackWindow(Window.getWindow());
@@ -164,7 +173,6 @@ public class Litecraft extends Game {
 
 	private void setupKeybinds() {
 		Input.addPressCallback(Keybind.EXIT, this::exit);
-		Input.addInitialPressCallback(Keybind.FULLSCREEN, Window::fullscreen);
 		Input.addInitialPressCallback(Keybind.WIREFRAME, GingerRegister.getInstance()::toggleWireframe);
 		Input.addPressCallback(Keybind.MOVE_FORWARD,
 				() -> ((PlayerEntity) this.player).move(RelativeDirection.FORWARD));
