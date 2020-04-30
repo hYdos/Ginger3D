@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.github.hydos.ginger.mixins",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "GameRendererMixin",
+    "MinecraftClientMixin"
+  ],
+  "client": [
+    "CrabMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -14,7 +14,6 @@ import java.util.stream.*;
 import org.joml.*;
 import org.lwjgl.vulkan.*;
 
-import com.github.hydos.ginger.engine.common.info.RenderAPI;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.vulkan.*;
 import com.github.hydos.ginger.engine.vulkan.elements.VKRenderObject;
@@ -90,8 +89,8 @@ public class VulkanExample {
 	}
 
 	private void initWindow() {
-		Window.create(1200, 800, "Vulkan Ginger2", 60, RenderAPI.Vulkan);
-		glfwSetFramebufferSizeCallback(Window.getWindow(), this::framebufferResizeCallback);
+//		Window.create(1200, 800, "Vulkan Ginger2", 60, RenderAPI.Vulkan);
+//		glfwSetFramebufferSizeCallback(Window.getWindow(), this::framebufferResizeCallback);
 	}
 
 	private void framebufferResizeCallback(long window, int width, int height) {
@@ -117,7 +116,7 @@ public class VulkanExample {
 
 	private void mainLoop() {
 
-		while (!Window.closed()) {
+		while (Window.closed()) {
 			if (Window.shouldRender()) {
 				Frame.drawFrame();
 			}

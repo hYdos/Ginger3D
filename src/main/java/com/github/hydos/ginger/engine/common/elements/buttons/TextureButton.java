@@ -3,7 +3,6 @@ package com.github.hydos.ginger.engine.common.elements.buttons;
 import java.util.List;
 
 import org.joml.Vector2f;
-import org.lwjgl.glfw.GLFW;
 
 import com.github.hydos.ginger.engine.common.elements.GLGuiTexture;
 import com.github.hydos.ginger.engine.common.io.Window;
@@ -66,7 +65,7 @@ public class TextureButton
 			if (location.y + scale.y > -mouseCoords.y && location.y - scale.y < -mouseCoords.y && location.x + scale.x > mouseCoords.x && location.x - scale.x < mouseCoords.x)
 			{
 				isHovering = true;
-				if (Window.isMousePressed(GLFW.GLFW_MOUSE_BUTTON_1))
+				if (Window.isMousePressed())
 				{
 					clicked = true;
 				}

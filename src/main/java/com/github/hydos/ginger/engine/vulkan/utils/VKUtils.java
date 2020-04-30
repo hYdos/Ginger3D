@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.lwjgl.PointerBuffer;
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.Pointer;
 import org.lwjgl.vulkan.VkBufferImageCopy;
@@ -894,7 +893,7 @@ public class VKUtils
 		try(MemoryStack stack = stackPush()) {
 
 			UniformBufferObject ubo = new UniformBufferObject();
-			if(Window.isKeyDown(GLFW.GLFW_KEY_W))
+			if(Window.isKeyDown())
 				ubo.model.rotate((float) (glfwGetTime() * Math.toRadians(90)), 0.0f, 0.0f, 1.0f);
 			ubo.view.lookAt(2.0f, 2.0f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 			ubo.proj.perspective((float) Math.toRadians(45),

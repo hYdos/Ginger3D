@@ -160,13 +160,6 @@ public class GLLoader
 		}
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-		if (Window.glContext.GL_EXT_texture_filter_anisotropic)
-		{//TODO: add option to use or disable
-			float amount = Math.min(4f, GL11.glGetFloat(EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT));
-			GL11.glTexParameterf(GL11.GL_TEXTURE_2D, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, amount);
-		}
-		else
-			System.out.println("anisotropic not supported!");
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 		return textureID;
 	}
