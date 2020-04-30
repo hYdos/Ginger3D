@@ -1,18 +1,14 @@
 package com.github.hydos.ginger.engine.common.io;
 
-import java.nio.*;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import org.joml.*;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 
 import com.github.hydos.ginger.engine.common.info.RenderAPI;
 import com.github.hydos.ginger.engine.opengl.api.GingerGL;
-import com.github.hydos.ginger.engine.opengl.render.texture.Image;
 
 @Environment(EnvType.CLIENT)
 public class Window
@@ -27,11 +23,7 @@ public class Window
 	public static int getHeight()
 	{ return MinecraftClient.getInstance().getWindow().getHeight(); }
 
-	public static boolean isFullscreen()
-	{ return MinecraftClient.getInstance().getWindow().isFullscreen(); }
-
-	private static Vector3f backgroundColour = new Vector3f(118f, 215f, 234f);
-	private static boolean[] mouseButtons = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST];
+	private static final Vector3f backgroundColour = new Vector3f(118f, 215f, 234f);
 	public static double dy = 0;
 	public static double dx = 0;
 	static double oldX = 0;
@@ -45,9 +37,9 @@ public class Window
 	private static int oldWindowHeight = Window.getHeight();
 
 	public static boolean closed()
-	{ return GLFW.glfwWindowShouldClose(getWindow()); }
+	{ return !GLFW.glfwWindowShouldClose(getWindow()); }
 
-	public static void create(RenderAPI api)
+	public static void create()
 	{
 		time = getTime();
 		getCurrentTime();
@@ -66,16 +58,12 @@ public class Window
 
 	public static double getMouseX()
 	{
-		DoubleBuffer buffer = BufferUtils.createDoubleBuffer(1);
-		GLFW.glfwGetCursorPos(getWindow(), buffer, null);
-		return buffer.get(0);
+		return 0;
 	}
 
 	public static double getMouseY()
 	{
-		DoubleBuffer buffer = BufferUtils.createDoubleBuffer(1);
-		GLFW.glfwGetCursorPos(getWindow(), null, buffer);
-		return buffer.get(0);
+		return 0;
 	}
 
 	public static Vector2f getNormalizedMouseCoordinates()
@@ -87,21 +75,18 @@ public class Window
 
 	public static double getTime()
 	{
-		double f = (double) System.nanoTime() / (long) 1000000000;
-		return f;
+		return (double) System.nanoTime() / (long) 1000000000;
 	}
 
-	public static boolean isKeyDown(int keycode)
-	{ return GLFW.glfwGetKey(getWindow(), keycode) == 1; }
+	public static boolean isKeyDown()
+	{return false;}
 
-	public static boolean isMouseDown(int mouseButton)
-	{ return GLFW.glfwGetMouseButton(getWindow(), mouseButton) == 1; }
+	public static boolean isMouseDown()
+	{return true;}
 
-	public static boolean isMousePressed(int keyCode)
-	{ return isMouseDown(keyCode) && !mouseButtons[keyCode]; }
+	public static boolean isMousePressed()
+	{return true;}
 
-	public static boolean isMouseReleased(int keyCode)
-	{ return !isMouseDown(keyCode) && mouseButtons[keyCode]; }
 
 	public static boolean shouldRender()
 	{
@@ -118,16 +103,10 @@ public class Window
 	}
 
 	public static void lockMouse()
-	{ GLFW.glfwSetInputMode(getWindow(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED); }
+	{}
 
 	public static void stop()
-	{ GLFW.glfwTerminate(); }
-
-	public static void swapBuffers()
-	{ GLFW.glfwSwapBuffers(getWindow()); }
-
-	public static void unlockMouse()
-	{ GLFW.glfwSetInputMode(getWindow(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL); }
+	{}
 
 	public static void update()
 	{
@@ -140,10 +119,6 @@ public class Window
 			GL11.glViewport(0, 0, getWidth(), getHeight());
 			GL11.glClearColor(backgroundColour.x/255, backgroundColour.y/255, backgroundColour.z/255, 1.0f);
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-		IntBuffer widthBuffer = BufferUtils.createIntBuffer(1);
-		IntBuffer heightBuffer = BufferUtils.createIntBuffer(1);
-		GLFW.glfwGetWindowSize(getWindow(), widthBuffer, heightBuffer);
-		GLFW.glfwPollEvents();
 		newX = Window.getMouseX();
 		newY = Window.getMouseY();
 		Window.dx = newX - oldX;

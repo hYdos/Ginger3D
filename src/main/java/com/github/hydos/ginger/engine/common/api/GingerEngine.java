@@ -16,7 +16,7 @@ public abstract class GingerEngine
 		return INSTANCE;
 	}
 	
-	protected Timer timer;
+	public Timer timer;
 	protected TickListener gameTickListener = new TickListener()
 	{
 		@Override
@@ -29,7 +29,7 @@ public abstract class GingerEngine
 	
 	public void startGameLoop()
 	{
-		while (!Window.closed())
+		while (Window.closed())
 		{
 			update(); // Run this regardless, (so as fast as possible)
 			timer.tick(); // Run this only [ticklimit] times per second (This invokes gameTickListener.onTick!)
@@ -42,7 +42,6 @@ public abstract class GingerEngine
 	public void update()
 	{
 		GLUtils.update();
-		Window.update();
 	}
 
 	public abstract void cleanup();

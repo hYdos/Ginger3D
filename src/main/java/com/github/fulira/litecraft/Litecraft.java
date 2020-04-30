@@ -31,6 +31,7 @@ public class Litecraft extends Game implements ModInitializer {
 	// when Vulkan is complete.
 
 	private static Litecraft INSTANCE;
+	public boolean isReady = false;
 	private World world;
 	private LitecraftSave save;
 	private GingerEngine engine;
@@ -60,7 +61,7 @@ public class Litecraft extends Game implements ModInitializer {
 		if (GingerRegister.getInstance().currentScreen == null && world == null)
 			((GingerGL) engine).openScreen(new TitleScreen());
 		// start the game loop
-		this.engine.startGameLoop();
+		isReady = true;
 	}
 
 	@Override
@@ -78,6 +79,8 @@ public class Litecraft extends Game implements ModInitializer {
 		System.exit(0);
 	}
 
+	public boolean showMC = false;
+
 	/**
 	 * Things that ARE rendering: Anything that results in something being drawn to
 	 * the frame buffer Things that are NOT rendering: Things that happen to update
@@ -85,18 +88,19 @@ public class Litecraft extends Game implements ModInitializer {
 	 */
 	@Override
 	public void render() {
-		fps += 1;
-		if (System.currentTimeMillis() > frameTimer + 1000)
-			updateDebugStats();
-		// Render shadows
-		GingerRegister.getInstance().masterRenderer.renderShadowMap(data.entities, data.lights.get(0));
-		// If there's a world, render it!
-		if (this.world != null)
-			renderWorld();
-		// Render any overlays (GUIs, HUDs)
-		this.engine.renderOverlays();
-		// Put what's stored in the inactive framebuffer on the screen
-		Window.swapBuffers();
+		if(!showMC){
+			fps += 1;
+			if (System.currentTimeMillis() > frameTimer + 1000)
+				updateDebugStats();
+			// Render shadows
+			GingerRegister.getInstance().masterRenderer.renderShadowMap(data.entities, data.lights.get(0));
+			// If there's a world, render it!
+			if (this.world != null)
+				renderWorld();
+			// Render any overlays (GUIs, HUDs)
+			this.engine.renderOverlays();
+			// Put what's stored in the inactive framebuffer on the screen
+		}
 	}
 
 	// Updates the debug stats once per real-time second, regardless of how many
@@ -138,8 +142,6 @@ public class Litecraft extends Game implements ModInitializer {
 		{
 //			Window.create(windowWidth, windowHeight, "Litecraft", frameCap, RenderAPI.OpenGL); // create window
 			// set up the gateways keybind key tracking
-			KeyCallbackHandler.trackWindow(Window.getWindow());
-			MouseCallbackHandler.trackWindow(Window.getWindow());
 			// set up ginger utilities
 			GLUtils.init();
 
@@ -182,6 +184,10 @@ public class Litecraft extends Game implements ModInitializer {
 		Input.addPressCallback(Keybind.STRAFE_RIGHT, () -> ((PlayerEntity) this.player).move(RelativeDirection.RIGHT));
 		Input.addPressCallback(Keybind.FLY_UP, () -> ((PlayerEntity) this.player).move(RelativeDirection.UP));
 		Input.addPressCallback(Keybind.FLY_DOWN, () -> ((PlayerEntity) this.player).move(RelativeDirection.DOWN));
+		Input.addPressCallback(Keybind.MINECRAFT, () -> {
+			showMC = !showMC;
+			System.out.println("Crab");
+		});
 	}
 
 	/**

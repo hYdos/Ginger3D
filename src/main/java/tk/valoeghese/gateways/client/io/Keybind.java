@@ -11,10 +11,9 @@ public enum Keybind
 	MOVE_BACKWARD(GLFW.GLFW_KEY_S, false), // Move the player backward relative to its facing direction
 	STRAFE_LEFT(GLFW.GLFW_KEY_A, false), // Move the player left relative to its facing direction
 	STRAFE_RIGHT(GLFW.GLFW_KEY_D, false), // Move the player right relative to its facing direction
+	MINECRAFT(GLFW.GLFW_KEY_V, false),
 	FLY_UP(GLFW.GLFW_KEY_SPACE, false), // Move the player upward
 	FLY_DOWN(GLFW.GLFW_KEY_LEFT_SHIFT, false), // Move the player downward
-	BREAK(GLFW.GLFW_MOUSE_BUTTON_1, true), // Place a block in front of the player
-	PLACE(GLFW.GLFW_MOUSE_BUTTON_2, true), // Break the block in front of the player
 	SLOT_1(GLFW.GLFW_KEY_1, false),  // Select the first item slot in the toolbar
 	SLOT_2(GLFW.GLFW_KEY_2, false),  // Select the second item slot in the toolbar
 	SLOT_3(GLFW.GLFW_KEY_3, false),  // Select the third item slot in the toolbar

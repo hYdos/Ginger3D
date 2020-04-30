@@ -4,6 +4,8 @@
   "package": "com.github.hydos.ginger.mixins",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "GameRendererMixin",
+    "MinecraftClientMixin"
   ],
   "client": [
     "CrabMixin"
