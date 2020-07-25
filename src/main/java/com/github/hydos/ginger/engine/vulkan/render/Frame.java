@@ -52,9 +52,9 @@ public class Frame {
 
             final int imageIndex = pImageIndex.get(0);
             VKVariables.currentImageIndex = imageIndex;
-            VKUtils.updateUniformBuffer(VKVariables.currentImageIndex, null);
             if (VKVariables.imagesInFlight.containsKey(imageIndex)) {
                 vkWaitForFences(VKVariables.device, VKVariables.imagesInFlight.get(imageIndex).fence(), true, VulkanExample.UINT64_MAX);
+                VKUtils.updateUniformBuffer(VKVariables.currentImageIndex, null);
             }
 
             VKVariables.imagesInFlight.put(imageIndex, thisFrame);

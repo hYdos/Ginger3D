@@ -23,7 +23,7 @@ public class VKBufferUtils {
             bufferInfo.sharingMode(VK_SHARING_MODE_EXCLUSIVE);
 
             if (vkCreateBuffer(VKVariables.device, bufferInfo, null, pBuffer) != VK_SUCCESS) {
-                throw new RuntimeException("Failed to create vertex buffer");
+                throw new RuntimeException("Failed to create buffer");
             }
 
             VkMemoryRequirements memRequirements = VkMemoryRequirements.mallocStack(stack);
@@ -35,7 +35,7 @@ public class VKBufferUtils {
             allocInfo.memoryTypeIndex(VKUtils.findMemoryType(memRequirements.memoryTypeBits(), properties));
 
             if (vkAllocateMemory(VKVariables.device, allocInfo, null, pBufferMemory) != VK_SUCCESS) {
-                throw new RuntimeException("Failed to allocate vertex buffer memory");
+                throw new RuntimeException("Failed to allocate buffer memory");
             }
 
             vkBindBufferMemory(VKVariables.device, pBuffer.get(0), pBufferMemory.get(0), 0);

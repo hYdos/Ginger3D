@@ -852,7 +852,6 @@ public class VKUtils {
     }
 
     public static void updateUniformBuffer(int currentImage, VKRenderObject renderObject) {
-
         try (MemoryStack stack = stackPush()) {
 
             UniformBufferObject ubo = new UniformBufferObject(renderObject);
@@ -868,9 +867,9 @@ public class VKUtils {
             ubo.proj.m11(ubo.proj.m11() * -1);
 
             PointerBuffer data = stack.mallocPointer(1);
-            vkMapMemory(VKVariables.device, vkRenderObject.uniformBuffersMemory.get(currentImage), 0, UniformBufferObject.SIZEOF, 0, data);
+            vkMapMemory(VKVariables.device, vkRenderObject.uniformBuffersMemory.get(currentImage), 0, UniformBufferObject.SIZEOF*GingerVK.getInstance().entityRenderer.entities.size(), 0, data);
             {
-                putUBOInMemory(data.getByteBuffer(0, UniformBufferObject.SIZEOF), ubo);
+                putUBOInMemory(data.getByteBuffer(0, UniformBufferObject.SIZEOF*GingerVK.getInstance().entityRenderer.entities.size()), ubo);
             }
             vkUnmapMemory(VKVariables.device, vkRenderObject.uniformBuffersMemory.get(currentImage));
         }

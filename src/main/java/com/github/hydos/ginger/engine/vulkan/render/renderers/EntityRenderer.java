@@ -22,7 +22,7 @@ public class EntityRenderer extends Renderer {
 
     public EntityRenderer() {
         priority = 1;
-        entities = new ArrayList<VKRenderObject>();
+        entities = new ArrayList<>();
     }
 
     public void processEntity(VKRenderObject entity) {

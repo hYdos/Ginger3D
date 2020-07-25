@@ -1,8 +1,6 @@
 package com.github.hydos.ginger.engine.common.io;
 
 import com.github.hydos.ginger.engine.common.info.RenderAPI;
-import com.github.hydos.ginger.engine.opengl.api.GingerGL;
-import com.github.hydos.ginger.engine.opengl.render.texture.Image;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
@@ -190,12 +188,12 @@ public class Window {
     }
 
     private static void setIcon() {
-        Image icon = Image.createImage("/icon.png");
-        GLFWImage iconImage = GLFWImage.malloc();
-        iconBuffer = GLFWImage.malloc(1);
-        iconImage.set(icon.getWidth(), icon.getHeight(), icon.getImage());
-        iconBuffer.put(0, iconImage);
-        GLFW.glfwSetWindowIcon(getWindow(), iconBuffer);
+//        Image icon = Image.createImage("/icon.png");
+//        GLFWImage iconImage = GLFWImage.malloc();
+//        iconBuffer = GLFWImage.malloc(1);
+//        iconImage.set(icon.getWidth(), icon.getHeight(), icon.getImage());
+//        iconBuffer.put(0, iconImage);
+//        GLFW.glfwSetWindowIcon(getWindow(), iconBuffer);
     }
 
     public static void showIcon() {
@@ -217,7 +215,7 @@ public class Window {
     public static void update() {
         if (renderAPI == RenderAPI.OpenGL) {
             if ((oldWindowHeight != Window.getHeight() || oldWindowWidth != Window.getWidth()) && Window.getHeight() > 10 && Window.getWidth() > 10) {
-                ((GingerGL) GingerGL.getInstance()).contrastFbo.resizeFBOs();
+//                ((GingerGL) GingerGL.getInstance()).contrastFbo.resizeFBOs();
                 oldWindowWidth = Window.getWidth();
                 oldWindowHeight = Window.getHeight();
             }
