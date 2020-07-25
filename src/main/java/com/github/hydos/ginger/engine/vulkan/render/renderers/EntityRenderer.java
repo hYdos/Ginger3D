@@ -1,86 +1,82 @@
 package com.github.hydos.ginger.engine.vulkan.render.renderers;
 
-import static org.lwjgl.vulkan.VK10.*;
-
-import java.nio.LongBuffer;
-import java.util.*;
-
+import com.github.hydos.ginger.engine.common.render.Renderer;
+import com.github.hydos.ginger.engine.vulkan.VKVariables;
+import com.github.hydos.ginger.engine.vulkan.elements.VKRenderObject;
+import com.github.hydos.ginger.engine.vulkan.model.VKModelLoader.VKMesh;
+import com.github.hydos.ginger.engine.vulkan.model.VKVertex;
+import com.github.hydos.ginger.engine.vulkan.render.VKBufferMesh;
+import com.github.hydos.ginger.engine.vulkan.utils.VKUtils;
 import org.joml.Vector3f;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.vulkan.VkCommandBuffer;
 
-import com.github.hydos.ginger.engine.common.render.Renderer;
-import com.github.hydos.ginger.engine.vulkan.VKVariables;
-import com.github.hydos.ginger.engine.vulkan.elements.VKRenderObject;
-import com.github.hydos.ginger.engine.vulkan.model.VKVertex;
-import com.github.hydos.ginger.engine.vulkan.model.VKModelLoader.VKMesh;
-import com.github.hydos.ginger.engine.vulkan.render.VKBufferMesh;
-import com.github.hydos.ginger.engine.vulkan.utils.VKUtils;
+import java.nio.LongBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
-public class EntityRenderer extends Renderer
-{
-	public List<VKRenderObject> entities;//TODO: batch rendering
-	
-	public EntityRenderer() {
-		priority = 1;
-		entities = new ArrayList<VKRenderObject>();
-	}
-	
-	public void processEntity(VKRenderObject entity) {
-		VKMesh mesh = entity.getRawModel();
-		VKBufferMesh processedMesh = new VKBufferMesh();
-		processedMesh.vkMesh = mesh;
-		int vertexCount = mesh.positions.size();
+import static org.lwjgl.vulkan.VK10.*;
 
-		processedMesh.vertices = new VKVertex[vertexCount];
+public class EntityRenderer extends Renderer {
+    public List<VKRenderObject> entities;//TODO: batch rendering
 
-		Vector3f color = new Vector3f(1.0f, 1.0f, 1.0f);
+    public EntityRenderer() {
+        priority = 1;
+        entities = new ArrayList<VKRenderObject>();
+    }
 
-		for(int i = 0;i < vertexCount;i++) {
-			processedMesh.vertices[i] = new VKVertex(
-				mesh.positions.get(i),
-				color,
-				mesh.texCoords.get(i));
-		}
+    public void processEntity(VKRenderObject entity) {
+        VKMesh mesh = entity.getRawModel();
+        VKBufferMesh processedMesh = new VKBufferMesh();
+        processedMesh.vkMesh = mesh;
+        int vertexCount = mesh.positions.size();
 
-		processedMesh.indices = new int[mesh.indices.size()];
+        processedMesh.vertices = new VKVertex[vertexCount];
 
-		for(int i = 0;i < processedMesh.indices.length;i++) {
-			processedMesh.indices[i] = mesh.indices.get(i);
-		}
-		
-		processedMesh = VKUtils.createVertexBuffer(processedMesh);
-		processedMesh = VKUtils.createIndexBuffer(processedMesh);
-		entity.setModel(processedMesh);
-		entities.add(entity);
-	}
-	
-	@Override
-	public void VKRender(MemoryStack stack, VkCommandBuffer commandBuffer, int index) 
-	{
-		
-		for(VKRenderObject entity : entities)
-		{
-			VKBufferMesh mesh = entity.getModel();
+        Vector3f color = new Vector3f(1.0f, 1.0f, 1.0f);
 
-	        LongBuffer vertexBuffers = stack.longs(mesh.vertexBuffer);
-	        LongBuffer offsets = stack.longs(0);
-	        vkCmdBindVertexBuffers(commandBuffer, 0, vertexBuffers, offsets);
+        for (int i = 0; i < vertexCount; i++) {
+            processedMesh.vertices[i] = new VKVertex(
+                    mesh.positions.get(i),
+                    color,
+                    mesh.texCoords.get(i));
+        }
 
-	        vkCmdBindIndexBuffer(commandBuffer, mesh.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+        processedMesh.indices = new int[mesh.indices.size()];
 
-	        vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
-	        	VKVariables.pipelineLayout,
-	                0, stack.longs(
-	                	VKVariables.descriptorSets.get(index)
-	                	), 
-	                null);
+        for (int i = 0; i < processedMesh.indices.length; i++) {
+            processedMesh.indices[i] = mesh.indices.get(i);
+        }
 
-	        vkCmdDrawIndexed(commandBuffer, mesh.vkMesh.indices.size(), 1, 0, 0, 0);
-		}
+        processedMesh = VKUtils.createVertexBuffer(processedMesh);
+        processedMesh = VKUtils.createIndexBuffer(processedMesh);
+        entity.setModel(processedMesh);
+        entities.add(entity);
+    }
 
-	}
-	
-	
-	
+    @Override
+    public void VKRender(MemoryStack stack, VkCommandBuffer commandBuffer, int index) {
+
+        for (VKRenderObject entity : entities) {
+            VKBufferMesh mesh = entity.getModel();
+
+            LongBuffer vertexBuffers = stack.longs(mesh.vertexBuffer);
+            LongBuffer offsets = stack.longs(0);
+            vkCmdBindVertexBuffers(commandBuffer, 0, vertexBuffers, offsets);
+
+            vkCmdBindIndexBuffer(commandBuffer, mesh.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+
+            vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
+                    VKVariables.pipelineLayout,
+                    0, stack.longs(
+                            entity.descriptorSets.get(index)
+                    ),
+                    null);
+
+            vkCmdDrawIndexed(commandBuffer, mesh.vkMesh.indices.size(), 1, 0, 0, 0);
+        }
+
+    }
+
+
 }

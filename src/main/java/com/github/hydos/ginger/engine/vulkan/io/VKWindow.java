@@ -1,30 +1,28 @@
 package com.github.hydos.ginger.engine.vulkan.io;
 
-import static org.lwjgl.vulkan.VK10.VK_NULL_HANDLE;
-import static org.lwjgl.vulkan.VK10.VK_SUCCESS;
-
-import java.nio.LongBuffer;
-
+import com.github.hydos.ginger.engine.common.io.Window;
+import com.github.hydos.ginger.engine.vulkan.VKVariables;
 import org.lwjgl.glfw.GLFWVulkan;
 import org.lwjgl.system.MemoryStack;
 
-import com.github.hydos.ginger.engine.common.io.Window;
-import com.github.hydos.ginger.engine.vulkan.VKVariables;
+import java.nio.LongBuffer;
 
-public class VKWindow
-{
-	public static void createSurface() {
+import static org.lwjgl.vulkan.VK10.VK_NULL_HANDLE;
+import static org.lwjgl.vulkan.VK10.VK_SUCCESS;
 
-		try(MemoryStack stack = MemoryStack.stackPush()) {
+public class VKWindow {
+    public static void createSurface() {
 
-			LongBuffer pSurface = stack.longs(VK_NULL_HANDLE);
+        try (MemoryStack stack = MemoryStack.stackPush()) {
 
-			if(GLFWVulkan.glfwCreateWindowSurface(VKVariables.instance, Window.getWindow(), null, pSurface) != VK_SUCCESS) {
-				throw new RuntimeException("Failed to create window surface");
-			}
+            LongBuffer pSurface = stack.longs(VK_NULL_HANDLE);
 
-			VKVariables.surface = pSurface.get(0);
-		}
-	}
-	
+            if (GLFWVulkan.glfwCreateWindowSurface(VKVariables.instance, Window.getWindow(), null, pSurface) != VK_SUCCESS) {
+                throw new RuntimeException("Failed to create window surface");
+            }
+
+            VKVariables.surface = pSurface.get(0);
+        }
+    }
+
 }

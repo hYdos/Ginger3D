@@ -1,62 +1,60 @@
 package com.github.hydos.ginger.engine.vulkan.utils;
 
-import static org.lwjgl.system.MemoryStack.stackPush;
-import static org.lwjgl.vulkan.VK10.*;
-
-import java.nio.LongBuffer;
-
+import com.github.hydos.ginger.engine.vulkan.VKVariables;
+import com.github.hydos.ginger.engine.vulkan.managers.CommandBufferManager;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.vulkan.*;
 
-import com.github.hydos.ginger.engine.vulkan.VKVariables;
-import com.github.hydos.ginger.engine.vulkan.managers.CommandBufferManager;
+import java.nio.LongBuffer;
 
-public class VKBufferUtils
-{
+import static org.lwjgl.system.MemoryStack.stackPush;
+import static org.lwjgl.vulkan.VK10.*;
 
-	public static void createBuffer(long size, int usage, int properties, LongBuffer pBuffer, LongBuffer pBufferMemory) {
+public class VKBufferUtils {
 
-		try(MemoryStack stack = stackPush()) {
+    public static void createBuffer(long size, int usage, int properties, LongBuffer pBuffer, LongBuffer pBufferMemory) {
 
-			VkBufferCreateInfo bufferInfo = VkBufferCreateInfo.callocStack(stack);
-			bufferInfo.sType(VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO);
-			bufferInfo.size(size);
-			bufferInfo.usage(usage);
-			bufferInfo.sharingMode(VK_SHARING_MODE_EXCLUSIVE);
+        try (MemoryStack stack = stackPush()) {
 
-			if(vkCreateBuffer(VKVariables.device, bufferInfo, null, pBuffer) != VK_SUCCESS) {
-				throw new RuntimeException("Failed to create vertex buffer");
-			}
+            VkBufferCreateInfo bufferInfo = VkBufferCreateInfo.callocStack(stack);
+            bufferInfo.sType(VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO);
+            bufferInfo.size(size);
+            bufferInfo.usage(usage);
+            bufferInfo.sharingMode(VK_SHARING_MODE_EXCLUSIVE);
 
-			VkMemoryRequirements memRequirements = VkMemoryRequirements.mallocStack(stack);
-			vkGetBufferMemoryRequirements(VKVariables.device, pBuffer.get(0), memRequirements);
+            if (vkCreateBuffer(VKVariables.device, bufferInfo, null, pBuffer) != VK_SUCCESS) {
+                throw new RuntimeException("Failed to create vertex buffer");
+            }
 
-			VkMemoryAllocateInfo allocInfo = VkMemoryAllocateInfo.callocStack(stack);
-			allocInfo.sType(VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO);
-			allocInfo.allocationSize(memRequirements.size());
-			allocInfo.memoryTypeIndex(VKUtils.findMemoryType(memRequirements.memoryTypeBits(), properties));
+            VkMemoryRequirements memRequirements = VkMemoryRequirements.mallocStack(stack);
+            vkGetBufferMemoryRequirements(VKVariables.device, pBuffer.get(0), memRequirements);
 
-			if(vkAllocateMemory(VKVariables.device, allocInfo, null, pBufferMemory) != VK_SUCCESS) {
-				throw new RuntimeException("Failed to allocate vertex buffer memory");
-			}
+            VkMemoryAllocateInfo allocInfo = VkMemoryAllocateInfo.callocStack(stack);
+            allocInfo.sType(VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO);
+            allocInfo.allocationSize(memRequirements.size());
+            allocInfo.memoryTypeIndex(VKUtils.findMemoryType(memRequirements.memoryTypeBits(), properties));
 
-			vkBindBufferMemory(VKVariables.device, pBuffer.get(0), pBufferMemory.get(0), 0);
-		}
-	}
+            if (vkAllocateMemory(VKVariables.device, allocInfo, null, pBufferMemory) != VK_SUCCESS) {
+                throw new RuntimeException("Failed to allocate vertex buffer memory");
+            }
 
-	public static void copyBuffer(long srcBuffer, long dstBuffer, long size) {
+            vkBindBufferMemory(VKVariables.device, pBuffer.get(0), pBufferMemory.get(0), 0);
+        }
+    }
 
-		try(MemoryStack stack = stackPush()) {
+    public static void copyBuffer(long srcBuffer, long dstBuffer, long size) {
 
-			VkCommandBuffer commandBuffer = CommandBufferManager.beginSingleTimeCommands();
+        try (MemoryStack stack = stackPush()) {
 
-			VkBufferCopy.Buffer copyRegion = VkBufferCopy.callocStack(1, stack);
-			copyRegion.size(size);
+            VkCommandBuffer commandBuffer = CommandBufferManager.beginSingleTimeCommands();
 
-			vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, copyRegion);
+            VkBufferCopy.Buffer copyRegion = VkBufferCopy.callocStack(1, stack);
+            copyRegion.size(size);
 
-			CommandBufferManager.endSingleTimeCommands(commandBuffer);
-		}
-	}
-	
+            vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, copyRegion);
+
+            CommandBufferManager.endSingleTimeCommands(commandBuffer);
+        }
+    }
+
 }

@@ -1,37 +1,37 @@
 package com.github.fulira.litecraft.world.dimension;
 
-import java.util.*;
-
 import com.github.fulira.litecraft.world.gen.ChunkGenerator;
 import com.github.fulira.litecraft.world.gen.modifier.WorldModifier;
+import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 
-import it.unimi.dsi.fastutil.ints.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Dimension<T extends ChunkGenerator> {
-	public List<WorldModifier> worldModifiers = new ArrayList<>();
-	public final int id;
-	public final String saveIdentifier;
+    private static final Int2ObjectMap<Dimension<?>> ID_TO_DIMENSION = new Int2ObjectArrayMap<>();
+    public final int id;
+    public final String saveIdentifier;
+    public List<WorldModifier> worldModifiers = new ArrayList<>();
 
-	public Dimension(int id, String saveIdentifier) {
-		this.id = id;
-		this.saveIdentifier = saveIdentifier;
-		ID_TO_DIMENSION.put(id, this);
-	}
+    public Dimension(int id, String saveIdentifier) {
+        this.id = id;
+        this.saveIdentifier = saveIdentifier;
+        ID_TO_DIMENSION.put(id, this);
+    }
 
-	public Dimension<T> addWorldModifier(WorldModifier modifier) {
-		this.worldModifiers.add(modifier);
-		return this;
-	}
+    public static Dimension<?> getById(int id) {
+        return ID_TO_DIMENSION.get(id);
+    }
 
-	public WorldModifier[] getWorldModifierArray() {
-		return this.worldModifiers.toArray(new WorldModifier[0]);
-	}
+    public Dimension<T> addWorldModifier(WorldModifier modifier) {
+        this.worldModifiers.add(modifier);
+        return this;
+    }
 
-	public abstract T createChunkGenerator(long seed);
+    public WorldModifier[] getWorldModifierArray() {
+        return this.worldModifiers.toArray(new WorldModifier[0]);
+    }
 
-	public static Dimension<?> getById(int id) {
-		return ID_TO_DIMENSION.get(id);
-	}
-
-	private static final Int2ObjectMap<Dimension<?>> ID_TO_DIMENSION = new Int2ObjectArrayMap<>();
+    public abstract T createChunkGenerator(long seed);
 }

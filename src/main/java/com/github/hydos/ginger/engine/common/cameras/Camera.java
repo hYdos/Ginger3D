@@ -1,38 +1,44 @@
 package com.github.hydos.ginger.engine.common.cameras;
 
+import com.github.hydos.ginger.engine.common.elements.objects.GLRenderObject;
 import org.joml.Vector3f;
 
-import com.github.hydos.ginger.engine.common.elements.objects.GLRenderObject;
+public abstract class Camera {
+    public GLRenderObject player;
+    private float pitch, yaw, roll;
+    private Vector3f position = new Vector3f(0, 0, 0);
 
-public abstract class Camera
-{
-	public GLRenderObject player;
-	private float pitch, yaw, roll;
-	private Vector3f position = new Vector3f(0, 0, 0);
+    public Vector3f getPosition() {
+        return position;
+    }
 
-	public Vector3f getPosition()
-	{ return position; }
-	
-	public float getPitch()
-	{ return pitch; }
+    public float getPitch() {
+        return pitch;
+    }
 
-	public float getRoll()
-	{ return roll; }
+    public void setPitch(float pitch) {
+        this.pitch = pitch;
+    }
 
-	public float getYaw()
-	{ return yaw; }
+    public float getRoll() {
+        return roll;
+    }
 
-	public void invertPitch()
-	{ this.pitch = -pitch; }
+    public void setRoll(float roll) {
+        this.roll = roll;
+    }
 
-	public void setPitch(float pitch)
-	{ this.pitch = pitch; }
+    public float getYaw() {
+        return yaw;
+    }
 
-	public void setYaw(float yaw)
-	{ this.yaw = yaw; }
+    public void setYaw(float yaw) {
+        this.yaw = yaw;
+    }
 
-	public void setRoll(float roll)
-	{ this.roll = roll; }
+    public void invertPitch() {
+        this.pitch = -pitch;
+    }
 
-	public abstract void updateMovement();
+    public abstract void updateMovement();
 }

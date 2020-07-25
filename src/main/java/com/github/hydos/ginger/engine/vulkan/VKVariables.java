@@ -1,37 +1,30 @@
 package com.github.hydos.ginger.engine.vulkan;
 
-import static org.lwjgl.vulkan.VK10.VK_SAMPLE_COUNT_1_BIT;
+import com.github.hydos.ginger.engine.vulkan.model.VKVertex;
+import com.github.hydos.ginger.engine.vulkan.render.Frame;
+import com.github.hydos.ginger.engine.vulkan.render.VKRenderManager;
+import org.lwjgl.vulkan.*;
 
 import java.util.List;
 import java.util.Map;
 
-import org.lwjgl.vulkan.VkCommandBuffer;
-import org.lwjgl.vulkan.VkDevice;
-import org.lwjgl.vulkan.VkExtent2D;
-import org.lwjgl.vulkan.VkInstance;
-import org.lwjgl.vulkan.VkPhysicalDevice;
-import org.lwjgl.vulkan.VkQueue;
-
-import com.github.hydos.ginger.engine.vulkan.model.VKVertex;
-import com.github.hydos.ginger.engine.vulkan.render.*;
+import static org.lwjgl.vulkan.VK10.VK_SAMPLE_COUNT_1_BIT;
 
 /**
- * 
  * the place where Vulkan variables are stored
- * @author hydos
  *
+ * @author hydos
  */
-public class VKVariables
-{
-	
-	public static VkInstance instance;
+public class VKVariables {
+
+    public static VkInstance instance;
     public static long surface;
 
     public static VkPhysicalDevice physicalDevice;
     public static VkDevice device;
-    
+
     public static int msaaSamples = VK_SAMPLE_COUNT_1_BIT;
-    
+
     public static VkQueue graphicsQueue;
     public static VkQueue presentQueue;
 
@@ -43,13 +36,12 @@ public class VKVariables
     public static List<Long> swapChainFramebuffers;
 
     public static long renderPass;
-    
+
     public static long descriptorPool;
     public static long descriptorSetLayout;
-    public static List<Long> descriptorSets;
-    
+
     public static long pipelineLayout;
-    
+
     public static long graphicsPipeline;
 
     public static long commandPool;
@@ -68,9 +60,6 @@ public class VKVariables
     public static long textureImageView;
     public static long textureSampler;
 
-    public static VKVertex[] vertices; //TODO: remove and properly add model loading
-    public static int[] indices;
-
     public static List<Long> uniformBuffers;//FIXME: may be the answer to all problems
     public static List<Long> uniformBuffersMemory;
 
@@ -82,6 +71,6 @@ public class VKVariables
 
     public static boolean framebufferResize;
     public static VKRenderManager renderManager;
-	public static int currentImageIndex;
-	
+    public static int currentImageIndex;
+
 }

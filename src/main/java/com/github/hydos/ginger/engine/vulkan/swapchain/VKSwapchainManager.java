@@ -1,28 +1,35 @@
 package com.github.hydos.ginger.engine.vulkan.swapchain;
 
-import static org.lwjgl.glfw.GLFW.*;
+import com.github.hydos.ginger.GingerVK;
+import com.github.hydos.ginger.VulkanExample.QueueFamilyIndices;
+import com.github.hydos.ginger.VulkanExample.SwapChainSupportDetails;
+import com.github.hydos.ginger.engine.common.io.Window;
+import com.github.hydos.ginger.engine.vulkan.VKVariables;
+import com.github.hydos.ginger.engine.vulkan.elements.VKRenderObject;
+import com.github.hydos.ginger.engine.vulkan.managers.CommandBufferManager;
+import com.github.hydos.ginger.engine.vulkan.render.VKRenderManager;
+import com.github.hydos.ginger.engine.vulkan.render.pipelines.VKPipelineManager;
+import com.github.hydos.ginger.engine.vulkan.render.renderers.EntityRenderer;
+import com.github.hydos.ginger.engine.vulkan.utils.VKUtils;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.vulkan.VkExtent2D;
+import org.lwjgl.vulkan.VkSurfaceFormatKHR;
+import org.lwjgl.vulkan.VkSwapchainCreateInfoKHR;
+
+import java.nio.IntBuffer;
+import java.nio.LongBuffer;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.lwjgl.glfw.GLFW.glfwGetFramebufferSize;
+import static org.lwjgl.glfw.GLFW.glfwWaitEvents;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.vulkan.KHRSurface.VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
 import static org.lwjgl.vulkan.KHRSwapchain.*;
 import static org.lwjgl.vulkan.VK10.*;
 
-import java.nio.*;
-import java.util.ArrayList;
+public class VKSwapchainManager {
 
-import org.lwjgl.system.MemoryStack;
-import org.lwjgl.vulkan.*;
-
-import com.github.hydos.ginger.VulkanExample.*;
-import com.github.hydos.ginger.engine.common.io.Window;
-import com.github.hydos.ginger.engine.vulkan.VKVariables;
-import com.github.hydos.ginger.engine.vulkan.managers.CommandBufferManager;
-import com.github.hydos.ginger.engine.vulkan.render.VKRenderManager;
-import com.github.hydos.ginger.engine.vulkan.render.pipelines.VKPipelineManager;
-import com.github.hydos.ginger.engine.vulkan.utils.VKUtils;
-
-public class VKSwapchainManager
-{
-	
     public static void cleanupSwapChain() {
 
         vkDestroyImageView(VKVariables.device, VKVariables.colorImageView, null);
@@ -52,15 +59,15 @@ public class VKSwapchainManager
 
         vkDestroySwapchainKHR(VKVariables.device, VKVariables.swapChain, null);
     }
-    
+
     public static void recreateSwapChain() {
 
-        try(MemoryStack stack = stackPush()) {
+        try (MemoryStack stack = stackPush()) {
 
             IntBuffer width = stack.ints(0);
             IntBuffer height = stack.ints(0);
 
-            while(width.get(0) == 0 && height.get(0) == 0) {
+            while (width.get(0) == 0 && height.get(0) == 0) {
                 glfwGetFramebufferSize(Window.getWindow(), width, height);
                 glfwWaitEvents();
             }
@@ -70,12 +77,12 @@ public class VKSwapchainManager
 
         VKSwapchainManager.cleanupSwapChain();
 
-        createSwapChainObjects();
+        createSwapChainObjects(GingerVK.getInstance().entityRenderer);
     }
-    
+
     public static void createSwapChain() {
 
-        try(MemoryStack stack = stackPush()) {
+        try (MemoryStack stack = stackPush()) {
 
             SwapChainSupportDetails swapChainSupport = VKUtils.querySwapChainSupport(VKVariables.physicalDevice, stack);
 
@@ -85,7 +92,7 @@ public class VKSwapchainManager
 
             IntBuffer imageCount = stack.ints(swapChainSupport.capabilities.minImageCount() + 1);
 
-            if(swapChainSupport.capabilities.maxImageCount() > 0 && imageCount.get(0) > swapChainSupport.capabilities.maxImageCount()) {
+            if (swapChainSupport.capabilities.maxImageCount() > 0 && imageCount.get(0) > swapChainSupport.capabilities.maxImageCount()) {
                 imageCount.put(0, swapChainSupport.capabilities.maxImageCount());
             }
 
@@ -104,7 +111,7 @@ public class VKSwapchainManager
 
             QueueFamilyIndices indices = VKUtils.findQueueFamilies(VKVariables.physicalDevice);
 
-            if(!indices.graphicsFamily.equals(indices.presentFamily)) {
+            if (!indices.graphicsFamily.equals(indices.presentFamily)) {
                 createInfo.imageSharingMode(VK_SHARING_MODE_CONCURRENT);
                 createInfo.pQueueFamilyIndices(stack.ints(indices.graphicsFamily, indices.presentFamily));
             } else {
@@ -120,7 +127,7 @@ public class VKSwapchainManager
 
             LongBuffer pSwapChain = stack.longs(VK_NULL_HANDLE);
 
-            if(vkCreateSwapchainKHR(VKVariables.device, createInfo, null, pSwapChain) != VK_SUCCESS) {
+            if (vkCreateSwapchainKHR(VKVariables.device, createInfo, null, pSwapChain) != VK_SUCCESS) {
                 throw new RuntimeException("Failed to create swap chain");
             }
 
@@ -134,31 +141,31 @@ public class VKSwapchainManager
 
             VKVariables.swapChainImages = new ArrayList<>(imageCount.get(0));
 
-            for(int i = 0;i < pSwapchainImages.capacity();i++) {
-            	VKVariables.swapChainImages.add(pSwapchainImages.get(i));
+            for (int i = 0; i < pSwapchainImages.capacity(); i++) {
+                VKVariables.swapChainImages.add(pSwapchainImages.get(i));
             }
 
             VKVariables.swapChainImageFormat = surfaceFormat.format();
             VKVariables.swapChainExtent = VkExtent2D.create().set(extent);
         }
     }
-    
-    
+
+
     /**
      * i tried organising it but if i change the order everything breaks
      */
-    public static void createSwapChainObjects() {
-    	createSwapChain();
-    	VKUtils.createImageViews();
-    	VKRenderManager.createRenderPass();
+    public static void createSwapChainObjects(EntityRenderer entityRenderer) {
+        createSwapChain();
+        VKUtils.createImageViews();
+        VKRenderManager.createRenderPass();
         VKPipelineManager.createGraphicsPipeline();
         VKUtils.createColorResources();
         VKUtils.createDepthResources();
         VKUtils.createFramebuffers();
         VKUtils.createUniformBuffers();
         VKUtils.createDescriptorPool();
-        VKUtils.createDescriptorSets();
+        VKUtils.createDescriptorSets(entityRenderer.entities);
         CommandBufferManager.createCommandBuffers();
     }
-	
+
 }

@@ -1,90 +1,73 @@
 package com.github.hydos.ginger.engine.common.elements.buttons;
 
-import java.util.List;
-
-import org.joml.Vector2f;
-import org.lwjgl.glfw.GLFW;
-
 import com.github.hydos.ginger.engine.common.elements.GLGuiTexture;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.opengl.utils.GLLoader;
+import org.joml.Vector2f;
+import org.lwjgl.glfw.GLFW;
 
-public class TextureButton
-{
-	private GLGuiTexture guiTexture;
-	private boolean shown = false;
-	private boolean clicked = false;
-	private boolean isHovering = false;
-	public String resourceLocation;
+import java.util.List;
 
-	public TextureButton(String texture, Vector2f position, Vector2f scale)
-	{
-		resourceLocation = texture;
-		guiTexture = new GLGuiTexture(GLLoader.loadTextureDirectly(texture), position, scale);
-	}
+public class TextureButton {
+    public String resourceLocation;
+    private GLGuiTexture guiTexture;
+    private boolean shown = false;
+    private boolean clicked = false;
+    private boolean isHovering = false;
 
-	public void hide(List<GLGuiTexture> guiTextureList)
-	{
-		if (!shown)
-		{
-		}
-		else
-		{
-			guiTextureList.remove(this.guiTexture);
-			this.shown = false;
-		}
-	}
+    public TextureButton(String texture, Vector2f position, Vector2f scale) {
+        resourceLocation = texture;
+        guiTexture = new GLGuiTexture(GLLoader.loadTextureDirectly(texture), position, scale);
+    }
 
-	public boolean isClicked()
-	{ return clicked; }
+    public void hide(List<GLGuiTexture> guiTextureList) {
+        if (!shown) {
+        } else {
+            guiTextureList.remove(this.guiTexture);
+            this.shown = false;
+        }
+    }
 
-	public boolean isHovering()
-	{ return isHovering; }
+    public boolean isClicked() {
+        return clicked;
+    }
 
-	public boolean isShown()
-	{ return shown; }
+    public boolean isHovering() {
+        return isHovering;
+    }
 
-	public void show(List<GLGuiTexture> guiTextureList)
-	{
-		if (shown)
-		{
-		}
-		else
-		{
-			guiTextureList.add(this.guiTexture);
-			this.shown = true;
-		}
-	}
+    public boolean isShown() {
+        return shown;
+    }
 
-	public void update()
-	{
-		if (shown)
-		{
-			Vector2f location = guiTexture.getPosition();
-			Vector2f scale = guiTexture.getScale();
-			Vector2f mouseCoords = Window.getNormalizedMouseCoordinates();
-			if (location.y + scale.y > -mouseCoords.y && location.y - scale.y < -mouseCoords.y && location.x + scale.x > mouseCoords.x && location.x - scale.x < mouseCoords.x)
-			{
-				isHovering = true;
-				if (Window.isMousePressed(GLFW.GLFW_MOUSE_BUTTON_1))
-				{
-					clicked = true;
-				}
-				else
-				{
-					clicked = false;
-				}
-			}
-			else
-			{
-				if (isHovering)
-				{ isHovering = false; }
-			}
-		}
-		else
-		{
-			isHovering = false;
-			clicked = false;
-		}
-	}
+    public void show(List<GLGuiTexture> guiTextureList) {
+        if (shown) {
+        } else {
+            guiTextureList.add(this.guiTexture);
+            this.shown = true;
+        }
+    }
+
+    public void update() {
+        if (shown) {
+            Vector2f location = guiTexture.getPosition();
+            Vector2f scale = guiTexture.getScale();
+            Vector2f mouseCoords = Window.getNormalizedMouseCoordinates();
+            if (location.y + scale.y > -mouseCoords.y && location.y - scale.y < -mouseCoords.y && location.x + scale.x > mouseCoords.x && location.x - scale.x < mouseCoords.x) {
+                isHovering = true;
+                if (Window.isMousePressed(GLFW.GLFW_MOUSE_BUTTON_1)) {
+                    clicked = true;
+                } else {
+                    clicked = false;
+                }
+            } else {
+                if (isHovering) {
+                    isHovering = false;
+                }
+            }
+        } else {
+            isHovering = false;
+            clicked = false;
+        }
+    }
 }

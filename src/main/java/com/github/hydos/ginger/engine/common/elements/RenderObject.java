@@ -2,76 +2,84 @@ package com.github.hydos.ginger.engine.common.elements;
 
 import org.joml.Vector3f;
 
-public abstract class RenderObject
-{
-	
-	public Vector3f position;
-	public float rotX = 0, rotY = 0, rotZ = 0;
-	public Vector3f scale;
-	public boolean visible = true;
-	
-	public void x(float x)
-	{ this.position.x = x; }
+public abstract class RenderObject {
 
-	public void y(float y)
-	{ this.position.y = y; }
+    public Vector3f position;
+    public float rotX = 0, rotY = 0, rotZ = 0;
+    public Vector3f scale;
+    public boolean visible = true;
 
-	public void z(float z)
-	{ this.position.z = z; }
-	
+    public void x(float x) {
+        this.position.x = x;
+    }
 
-	public Vector3f getPosition()
-	{ return position; }
+    public void y(float y) {
+        this.position.y = y;
+    }
 
-	public float getRotX()
-	{ return rotX; }
+    public void z(float z) {
+        this.position.z = z;
+    }
 
-	public float getRotY()
-	{ return rotY; }
 
-	public float getRotZ()
-	{ return rotZ; }
+    public Vector3f getPosition() {
+        return position;
+    }
 
-	public Vector3f getScale()
-	{ return scale; }
+    public void setPosition(Vector3f position) {
+        this.position = position;
+    }
 
-	public void increasePosition(float dx, float dy, float dz)
-	{
-		this.position.x += dx;
-		this.position.y += dy;
-		this.position.z += dz;
-	}
+    public float getRotX() {
+        return rotX;
+    }
 
-	public void increaseRotation(float dx, float dy, float dz)
-	{
-		this.rotX += dx;
-		this.rotY += dy;
-		this.rotZ += dz;
-	}
+    public void setRotX(float rotX) {
+        this.rotX = rotX;
+    }
 
-	public void setPosition(Vector3f position)
-	{ this.position = position; }
+    public float getRotY() {
+        return rotY;
+    }
 
-	public void setRotX(float rotX)
-	{ this.rotX = rotX; }
+    public void setRotY(float rotY) {
+        this.rotY = rotY;
+    }
 
-	public void setRotY(float rotY)
-	{ this.rotY = rotY; }
+    public float getRotZ() {
+        return rotZ;
+    }
 
-	public void setRotZ(float rotZ)
-	{ this.rotZ = rotZ; }
+    public void setRotZ(float rotZ) {
+        this.rotZ = rotZ;
+    }
 
-	public void setScale(Vector3f scale)
-	{ this.scale = scale; }
+    public Vector3f getScale() {
+        return scale;
+    }
 
-	public boolean isVisible()
-	{
-		return visible;
-	}
+    public void setScale(Vector3f scale) {
+        this.scale = scale;
+    }
 
-	public void setVisible(boolean visible)
-	{
-		this.visible = visible;
-	}
-	
+    public void increasePosition(float dx, float dy, float dz) {
+        this.position.x += dx;
+        this.position.y += dy;
+        this.position.z += dz;
+    }
+
+    public void increaseRotation(float dx, float dy, float dz) {
+        this.rotX += dx;
+        this.rotY += dy;
+        this.rotZ += dz;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
 }

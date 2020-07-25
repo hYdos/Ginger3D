@@ -33,17 +33,17 @@ public class VKShaderUtils {
 
         long compiler = shaderc_compiler_initialize();
 
-        if(compiler == NULL) {
+        if (compiler == NULL) {
             throw new RuntimeException("Failed to create shader compiler");
         }
 
         long result = shaderc_compile_into_spv(compiler, source, shaderKind.kind, filename, "main", NULL);
 
-        if(result == NULL) {
+        if (result == NULL) {
             throw new RuntimeException("Failed to compile shader " + filename + " into SPIR-V");
         }
 
-        if(shaderc_result_get_compilation_status(result) != shaderc_compilation_status_success) {
+        if (shaderc_result_get_compilation_status(result) != shaderc_compilation_status_success) {
             throw new RuntimeException("Failed to compile shader " + filename + "into SPIR-V:\n " + shaderc_result_get_error_message(result));
         }
 

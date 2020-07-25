@@ -1,93 +1,92 @@
 package tk.valoeghese.sod;
 
-import java.io.*;
-import java.util.*;
-
 import tk.valoeghese.sod.exception.SODParseException;
+
+import java.io.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 @SuppressWarnings("rawtypes")
 public class BinaryData implements Iterable<Map.Entry<String, BaseDataSection>> {
-	public BinaryData() {
-		this.sections = new HashMap<>();
-	}
+    private final Map<String, BaseDataSection> sections;
 
-	private final Map<String, BaseDataSection> sections;
+    public BinaryData() {
+        this.sections = new HashMap<>();
+    }
 
-	public DataSection get(String name) {
-		return (DataSection) this.sections.get(name);
-	}
+    public static BinaryData read(File file) throws SODParseException {
+        try (DataInputStream dis = new DataInputStream(new FileInputStream(file))) {
+            long magic = dis.readLong();
 
-	public ByteArrayDataSection getByteArray(String name) {
-		return (ByteArrayDataSection) this.sections.get(name);
-	}
+            if (magic != 0xA77D1E) {
+                throw new SODParseException("Not a valid SOD file!");
+            }
 
-	public ShortArrayDataSection getShortArray(String name) {
-		return (ShortArrayDataSection) this.sections.get(name);
-	}
+            return Parser.parse(dis);
+        } catch (IOException e) {
+            System.err.println("Error in parsing file " + file.toString());
+            e.printStackTrace();
+            return new BinaryData();
+        }
+    }
 
-	public IntArrayDataSection getIntArray(String name) {
-		return (IntArrayDataSection) this.sections.get(name);
-	}
+    public DataSection get(String name) {
+        return (DataSection) this.sections.get(name);
+    }
 
-	public LongArrayDataSection getLongArray(String name) {
-		return (LongArrayDataSection) this.sections.get(name);
-	}
+    public ByteArrayDataSection getByteArray(String name) {
+        return (ByteArrayDataSection) this.sections.get(name);
+    }
 
-	public FloatArrayDataSection getFloatArray(String name) {
-		return (FloatArrayDataSection) this.sections.get(name);
-	}
+    public ShortArrayDataSection getShortArray(String name) {
+        return (ShortArrayDataSection) this.sections.get(name);
+    }
 
-	public DoubleArrayDataSection getDoubleArray(String name) {
-		return (DoubleArrayDataSection) this.sections.get(name);
-	}
+    public IntArrayDataSection getIntArray(String name) {
+        return (IntArrayDataSection) this.sections.get(name);
+    }
 
-	public StringArrayDataSection getStringArray(String name) {
-		return (StringArrayDataSection) this.sections.get(name);
-	}
+    public LongArrayDataSection getLongArray(String name) {
+        return (LongArrayDataSection) this.sections.get(name);
+    }
 
-	public DataSection getOrCreate(String name) {
-		return (DataSection) this.sections.computeIfAbsent(name, k -> new DataSection());
-	}
+    public FloatArrayDataSection getFloatArray(String name) {
+        return (FloatArrayDataSection) this.sections.get(name);
+    }
 
-	public void put(String name, BaseDataSection section) {
-		this.sections.put(name, section);
-	}
+    public DoubleArrayDataSection getDoubleArray(String name) {
+        return (DoubleArrayDataSection) this.sections.get(name);
+    }
 
-	public boolean containsSection(String name) {
-		return this.sections.containsKey(name);
-	}
+    public StringArrayDataSection getStringArray(String name) {
+        return (StringArrayDataSection) this.sections.get(name);
+    }
 
-	public boolean write(File file) {
-		try (DataOutputStream dos = new DataOutputStream(new FileOutputStream(file))) {
-			Parser.write(this, dos);
-			return true;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
+    public DataSection getOrCreate(String name) {
+        return (DataSection) this.sections.computeIfAbsent(name, k -> new DataSection());
+    }
 
-	@Override
-	public Iterator<Map.Entry<String, BaseDataSection>> iterator()
-	{ return this.sections.entrySet().iterator(); }
+    public void put(String name, BaseDataSection section) {
+        this.sections.put(name, section);
+    }
 
-	public static BinaryData read(File file) throws SODParseException
-	{
-		try (DataInputStream dis = new DataInputStream(new FileInputStream(file)))
-		{
-			long magic = dis.readLong();
+    public boolean containsSection(String name) {
+        return this.sections.containsKey(name);
+    }
 
-			if (magic != 0xA77D1E) {
-				throw new SODParseException("Not a valid SOD file!");
-			}
+    public boolean write(File file) {
+        try (DataOutputStream dos = new DataOutputStream(new FileOutputStream(file))) {
+            Parser.write(this, dos);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
-			return Parser.parse(dis);
-		}
-		catch (IOException e)
-		{
-			System.err.println("Error in parsing file " + file.toString());
-			e.printStackTrace();
-			return new BinaryData();
-		}
-	}
+    @Override
+    public Iterator<Map.Entry<String, BaseDataSection>> iterator() {
+        return this.sections.entrySet().iterator();
+    }
 }

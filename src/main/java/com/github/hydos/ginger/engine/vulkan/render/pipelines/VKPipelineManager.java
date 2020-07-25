@@ -1,65 +1,24 @@
 package com.github.hydos.ginger.engine.vulkan.render.pipelines;
 
-import static org.lwjgl.system.MemoryStack.stackPush;
-import static org.lwjgl.vulkan.VK10.VK_COLOR_COMPONENT_A_BIT;
-import static org.lwjgl.vulkan.VK10.VK_COLOR_COMPONENT_B_BIT;
-import static org.lwjgl.vulkan.VK10.VK_COLOR_COMPONENT_G_BIT;
-import static org.lwjgl.vulkan.VK10.VK_COLOR_COMPONENT_R_BIT;
-import static org.lwjgl.vulkan.VK10.VK_COMPARE_OP_LESS;
-import static org.lwjgl.vulkan.VK10.VK_CULL_MODE_BACK_BIT;
-import static org.lwjgl.vulkan.VK10.VK_FRONT_FACE_COUNTER_CLOCKWISE;
-import static org.lwjgl.vulkan.VK10.VK_LOGIC_OP_COPY;
-import static org.lwjgl.vulkan.VK10.VK_NULL_HANDLE;
-import static org.lwjgl.vulkan.VK10.VK_POLYGON_MODE_FILL;
-import static org.lwjgl.vulkan.VK10.VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-import static org.lwjgl.vulkan.VK10.VK_SHADER_STAGE_FRAGMENT_BIT;
-import static org.lwjgl.vulkan.VK10.VK_SHADER_STAGE_VERTEX_BIT;
-import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
-import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
-import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
-import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
-import static org.lwjgl.vulkan.VK10.VK_SUCCESS;
-import static org.lwjgl.vulkan.VK10.vkCreateGraphicsPipelines;
-import static org.lwjgl.vulkan.VK10.vkCreatePipelineLayout;
-import static org.lwjgl.vulkan.VK10.vkDestroyShaderModule;
-
-import java.nio.ByteBuffer;
-import java.nio.LongBuffer;
-
-import org.lwjgl.system.MemoryStack;
-import org.lwjgl.vulkan.VkGraphicsPipelineCreateInfo;
-import org.lwjgl.vulkan.VkOffset2D;
-import org.lwjgl.vulkan.VkPipelineColorBlendAttachmentState;
-import org.lwjgl.vulkan.VkPipelineColorBlendStateCreateInfo;
-import org.lwjgl.vulkan.VkPipelineDepthStencilStateCreateInfo;
-import org.lwjgl.vulkan.VkPipelineInputAssemblyStateCreateInfo;
-import org.lwjgl.vulkan.VkPipelineLayoutCreateInfo;
-import org.lwjgl.vulkan.VkPipelineMultisampleStateCreateInfo;
-import org.lwjgl.vulkan.VkPipelineRasterizationStateCreateInfo;
-import org.lwjgl.vulkan.VkPipelineShaderStageCreateInfo;
-import org.lwjgl.vulkan.VkPipelineVertexInputStateCreateInfo;
-import org.lwjgl.vulkan.VkPipelineViewportStateCreateInfo;
-import org.lwjgl.vulkan.VkRect2D;
-import org.lwjgl.vulkan.VkViewport;
-
 import com.github.hydos.ginger.engine.vulkan.VKVariables;
 import com.github.hydos.ginger.engine.vulkan.model.VKVertex;
 import com.github.hydos.ginger.engine.vulkan.shaders.VKShaderManager;
 import com.github.hydos.ginger.engine.vulkan.shaders.VKShaderUtils;
 import com.github.hydos.ginger.engine.vulkan.shaders.VKShaderUtils.SPIRV;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.vulkan.*;
 
-public class VKPipelineManager
-{
-	
+import java.nio.ByteBuffer;
+import java.nio.LongBuffer;
+
+import static org.lwjgl.system.MemoryStack.stackPush;
+import static org.lwjgl.vulkan.VK10.*;
+
+public class VKPipelineManager {
+
     public static void createGraphicsPipeline() {
 
-        try(MemoryStack stack = stackPush()) {
+        try (MemoryStack stack = stackPush()) {
             SPIRV vertShaderSPIRV = VKShaderUtils.compileShaderFile("vulkan/shaders/entity.vert", VKShaderUtils.ShaderType.VERTEX_SHADER);
             SPIRV fragShaderSPIRV = VKShaderUtils.compileShaderFile("vulkan/shaders/entity.frag", VKShaderUtils.ShaderType.FRAGMENT_SHADER);
 
@@ -103,7 +62,7 @@ public class VKPipelineManager
             VkViewport.Buffer viewport = VkViewport.callocStack(1, stack);
             viewport.x(0.0f);
             viewport.y(0.0f);
-            viewport.width(VKVariables .swapChainExtent.width());
+            viewport.width(VKVariables.swapChainExtent.width());
             viewport.height(VKVariables.swapChainExtent.height());
             viewport.minDepth(0.0f);
             viewport.maxDepth(1.0f);
@@ -168,7 +127,7 @@ public class VKPipelineManager
 
             LongBuffer pPipelineLayout = stack.longs(VK_NULL_HANDLE);
 
-            if(vkCreatePipelineLayout(VKVariables.device, pipelineLayoutInfo, null, pPipelineLayout) != VK_SUCCESS) {
+            if (vkCreatePipelineLayout(VKVariables.device, pipelineLayoutInfo, null, pPipelineLayout) != VK_SUCCESS) {
                 throw new RuntimeException("Failed to create pipeline layout");
             }
 
@@ -192,7 +151,7 @@ public class VKPipelineManager
 
             LongBuffer pGraphicsPipeline = stack.mallocLong(1);
 
-            if(vkCreateGraphicsPipelines(VKVariables.device, VK_NULL_HANDLE, pipelineInfo, null, pGraphicsPipeline) != VK_SUCCESS) {
+            if (vkCreateGraphicsPipelines(VKVariables.device, VK_NULL_HANDLE, pipelineInfo, null, pGraphicsPipeline) != VK_SUCCESS) {
                 throw new RuntimeException("Failed to create graphics pipeline");
             }
 
@@ -207,5 +166,5 @@ public class VKPipelineManager
             fragShaderSPIRV.free();
         }
     }
-	
+
 }

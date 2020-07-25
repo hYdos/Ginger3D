@@ -1,139 +1,123 @@
 package com.github.hydos.ginger.engine.vulkan.utils;
 
-import static org.lwjgl.system.MemoryStack.stackPush;
-import static org.lwjgl.vulkan.VK10.VK_NULL_HANDLE;
-import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-import static org.lwjgl.vulkan.VK10.VK_SUCCESS;
-import static org.lwjgl.vulkan.VK10.vkCreateDevice;
-import static org.lwjgl.vulkan.VK10.vkEnumeratePhysicalDevices;
-import static org.lwjgl.vulkan.VK10.vkGetDeviceQueue;
-import static org.lwjgl.vulkan.VK10.vkGetPhysicalDeviceFeatures;
-
-import java.nio.IntBuffer;
-
-import org.lwjgl.PointerBuffer;
-import org.lwjgl.system.MemoryStack;
-import org.lwjgl.vulkan.VkDevice;
-import org.lwjgl.vulkan.VkDeviceCreateInfo;
-import org.lwjgl.vulkan.VkDeviceQueueCreateInfo;
-import org.lwjgl.vulkan.VkPhysicalDevice;
-import org.lwjgl.vulkan.VkPhysicalDeviceFeatures;
-import org.lwjgl.vulkan.VkQueue;
-
 import com.github.hydos.ginger.VulkanExample;
 import com.github.hydos.ginger.VulkanExample.QueueFamilyIndices;
 import com.github.hydos.ginger.VulkanExample.SwapChainSupportDetails;
 import com.github.hydos.ginger.engine.vulkan.VKVariables;
+import org.lwjgl.PointerBuffer;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.vulkan.*;
 
-public class VKDeviceManager
-{
-	public static void createLogicalDevice() {
+import java.nio.IntBuffer;
 
-		try(MemoryStack stack = stackPush()) {
+import static org.lwjgl.system.MemoryStack.stackPush;
+import static org.lwjgl.vulkan.VK10.*;
 
-			QueueFamilyIndices indices = VKUtils.findQueueFamilies(VKVariables.physicalDevice);
+public class VKDeviceManager {
+    public static void createLogicalDevice() {
 
-			int[] uniqueQueueFamilies = indices.unique();
+        try (MemoryStack stack = stackPush()) {
 
-			VkDeviceQueueCreateInfo.Buffer queueCreateInfos = VkDeviceQueueCreateInfo.callocStack(uniqueQueueFamilies.length, stack);
+            QueueFamilyIndices indices = VKUtils.findQueueFamilies(VKVariables.physicalDevice);
 
-			for(int i = 0;i < uniqueQueueFamilies.length;i++) {
-				VkDeviceQueueCreateInfo queueCreateInfo = queueCreateInfos.get(i);
-				queueCreateInfo.sType(VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO);
-				queueCreateInfo.queueFamilyIndex(uniqueQueueFamilies[i]);
-				queueCreateInfo.pQueuePriorities(stack.floats(1.0f));
-			}
+            int[] uniqueQueueFamilies = indices.unique();
 
-			VkPhysicalDeviceFeatures deviceFeatures = VkPhysicalDeviceFeatures.callocStack(stack);
-			deviceFeatures.samplerAnisotropy(true);
-			deviceFeatures.sampleRateShading(true); // Enable sample shading feature for the device
+            VkDeviceQueueCreateInfo.Buffer queueCreateInfos = VkDeviceQueueCreateInfo.callocStack(uniqueQueueFamilies.length, stack);
 
-			VkDeviceCreateInfo createInfo = VkDeviceCreateInfo.callocStack(stack);
+            for (int i = 0; i < uniqueQueueFamilies.length; i++) {
+                VkDeviceQueueCreateInfo queueCreateInfo = queueCreateInfos.get(i);
+                queueCreateInfo.sType(VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO);
+                queueCreateInfo.queueFamilyIndex(uniqueQueueFamilies[i]);
+                queueCreateInfo.pQueuePriorities(stack.floats(1.0f));
+            }
 
-			createInfo.sType(VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO);
-			createInfo.pQueueCreateInfos(queueCreateInfos);
-			// queueCreateInfoCount is automatically set
+            VkPhysicalDeviceFeatures deviceFeatures = VkPhysicalDeviceFeatures.callocStack(stack);
+            deviceFeatures.samplerAnisotropy(true);
+            deviceFeatures.sampleRateShading(true); // Enable sample shading feature for the device
 
-			createInfo.pEnabledFeatures(deviceFeatures);
+            VkDeviceCreateInfo createInfo = VkDeviceCreateInfo.callocStack(stack);
 
-			createInfo.ppEnabledExtensionNames(VKUtils.asPointerBuffer(VulkanExample.DEVICE_EXTENSIONS));
+            createInfo.sType(VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO);
+            createInfo.pQueueCreateInfos(queueCreateInfos);
+            // queueCreateInfoCount is automatically set
 
-			PointerBuffer pDevice = stack.pointers(VK_NULL_HANDLE);
+            createInfo.pEnabledFeatures(deviceFeatures);
 
-			if(vkCreateDevice(VKVariables.physicalDevice, createInfo, null, pDevice) != VK_SUCCESS) {
-				throw new RuntimeException("Failed to create logical device");
-			}
+            createInfo.ppEnabledExtensionNames(VKUtils.asPointerBuffer(VulkanExample.DEVICE_EXTENSIONS));
 
-			VKVariables.device = new VkDevice(pDevice.get(0), VKVariables.physicalDevice, createInfo);
+            PointerBuffer pDevice = stack.pointers(VK_NULL_HANDLE);
 
-			PointerBuffer pQueue = stack.pointers(VK_NULL_HANDLE);
+            if (vkCreateDevice(VKVariables.physicalDevice, createInfo, null, pDevice) != VK_SUCCESS) {
+                throw new RuntimeException("Failed to create logical device");
+            }
 
-			vkGetDeviceQueue(VKVariables.device, indices.graphicsFamily, 0, pQueue);
-			VKVariables.graphicsQueue = new VkQueue(pQueue.get(0), VKVariables.device);
+            VKVariables.device = new VkDevice(pDevice.get(0), VKVariables.physicalDevice, createInfo);
 
-			vkGetDeviceQueue(VKVariables.device, indices.presentFamily, 0, pQueue);
-			VKVariables.presentQueue = new VkQueue(pQueue.get(0), VKVariables.device);
-		}
-	}
+            PointerBuffer pQueue = stack.pointers(VK_NULL_HANDLE);
 
-	public static void pickPhysicalDevice()
-	{
-		try(MemoryStack stack = stackPush()) {
+            vkGetDeviceQueue(VKVariables.device, indices.graphicsFamily, 0, pQueue);
+            VKVariables.graphicsQueue = new VkQueue(pQueue.get(0), VKVariables.device);
 
-			IntBuffer deviceCount = stack.ints(0);
+            vkGetDeviceQueue(VKVariables.device, indices.presentFamily, 0, pQueue);
+            VKVariables.presentQueue = new VkQueue(pQueue.get(0), VKVariables.device);
+        }
+    }
 
-			vkEnumeratePhysicalDevices(VKVariables.instance, deviceCount, null);
+    public static void pickPhysicalDevice() {
+        try (MemoryStack stack = stackPush()) {
 
-			if(deviceCount.get(0) == 0) {
-				throw new RuntimeException("Failed to find GPUs with Vulkan support");
-			}
+            IntBuffer deviceCount = stack.ints(0);
 
-			PointerBuffer ppPhysicalDevices = stack.mallocPointer(deviceCount.get(0));
+            vkEnumeratePhysicalDevices(VKVariables.instance, deviceCount, null);
 
-			vkEnumeratePhysicalDevices(VKVariables.instance, deviceCount, ppPhysicalDevices);
+            if (deviceCount.get(0) == 0) {
+                throw new RuntimeException("Failed to find GPUs with Vulkan support");
+            }
 
-			VkPhysicalDevice device = null;
+            PointerBuffer ppPhysicalDevices = stack.mallocPointer(deviceCount.get(0));
 
-			for(int i = 0;i < ppPhysicalDevices.capacity();i++) {
+            vkEnumeratePhysicalDevices(VKVariables.instance, deviceCount, ppPhysicalDevices);
 
-				device = new VkPhysicalDevice(ppPhysicalDevices.get(i), VKVariables.instance);
+            VkPhysicalDevice device = null;
 
-				if(isDeviceSuitable(device)) {
-					break;
-				}
-			}
+            for (int i = 0; i < ppPhysicalDevices.capacity(); i++) {
 
-			if(device == null) {
-				throw new RuntimeException("Failed to find a suitable GPU");
-			}
+                device = new VkPhysicalDevice(ppPhysicalDevices.get(i), VKVariables.instance);
 
-			VKVariables.physicalDevice = device;
-			VKVariables.msaaSamples = VKUtils.getMaxUsableSampleCount();
-		}
-	}
-	
-	private static boolean isDeviceSuitable(VkPhysicalDevice device) {
+                if (isDeviceSuitable(device)) {
+                    break;
+                }
+            }
 
-		QueueFamilyIndices indices = VKUtils.findQueueFamilies(device);
+            if (device == null) {
+                throw new RuntimeException("Failed to find a suitable GPU");
+            }
 
-		boolean extensionsSupported = VKUtils.checkDeviceExtensionSupport(device);
-		boolean swapChainAdequate = false;
-		boolean anisotropySupported = false;
+            VKVariables.physicalDevice = device;
+            VKVariables.msaaSamples = VKUtils.getMaxUsableSampleCount();
+        }
+    }
 
-		if(extensionsSupported) {
-			try(MemoryStack stack = stackPush()) {
-				SwapChainSupportDetails swapChainSupport = VKUtils.querySwapChainSupport(device, stack);
-				swapChainAdequate = swapChainSupport.formats.hasRemaining() && swapChainSupport.presentModes.hasRemaining();
-				VkPhysicalDeviceFeatures supportedFeatures = VkPhysicalDeviceFeatures.mallocStack(stack);
-				vkGetPhysicalDeviceFeatures(device, supportedFeatures);
-				anisotropySupported = supportedFeatures.samplerAnisotropy();
-			}
-		}
+    private static boolean isDeviceSuitable(VkPhysicalDevice device) {
 
-		return indices.isComplete() && extensionsSupported && swapChainAdequate && anisotropySupported;
-	}
-	
-	
-	
+        QueueFamilyIndices indices = VKUtils.findQueueFamilies(device);
+
+        boolean extensionsSupported = VKUtils.checkDeviceExtensionSupport(device);
+        boolean swapChainAdequate = false;
+        boolean anisotropySupported = false;
+
+        if (extensionsSupported) {
+            try (MemoryStack stack = stackPush()) {
+                SwapChainSupportDetails swapChainSupport = VKUtils.querySwapChainSupport(device, stack);
+                swapChainAdequate = swapChainSupport.formats.hasRemaining() && swapChainSupport.presentModes.hasRemaining();
+                VkPhysicalDeviceFeatures supportedFeatures = VkPhysicalDeviceFeatures.mallocStack(stack);
+                vkGetPhysicalDeviceFeatures(device, supportedFeatures);
+                anisotropySupported = supportedFeatures.samplerAnisotropy();
+            }
+        }
+
+        return indices.isComplete() && extensionsSupported && swapChainAdequate && anisotropySupported;
+    }
+
+
 }
