@@ -26,7 +26,6 @@ public class ByteArrayDataSection implements BaseDataSection<Byte> {
 	@Override
 	public <T> void writeForParser(T data) throws UnsupportedOperationException {
 		if (data instanceof Byte) {
-			this.writeByte((byte) data);
 		} else {
 			throw new UnsupportedOperationException("Invalid data type parameter for this data section");
 		}

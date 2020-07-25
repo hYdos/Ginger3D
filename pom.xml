@@ -10,8 +10,8 @@
 	<description>A voxel game implementation of the Ginger3D engine by hYdos</description>
 	<url>http://maven.apache.org</url>
 	<properties>
-		<maven.compiler.target>13</maven.compiler.target>
-		<maven.compiler.source>13</maven.compiler.source>
+		<maven.compiler.target>8</maven.compiler.target>
+		<maven.compiler.source>8</maven.compiler.source>
 		<lwjgl.version>3.2.4-SNAPSHOT</lwjgl.version>
 		<joml.version>1.9.20</joml.version>
 	</properties>
@@ -232,42 +232,42 @@
 		<dependency>
 			<groupId>org.lwjgl</groupId>
 			<artifactId>lwjgl</artifactId>
-			<classifier>natives-macos</classifier>
+			<classifier>natives-linux</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.lwjgl</groupId>
 			<artifactId>lwjgl-assimp</artifactId>
-			<classifier>natives-macos</classifier>
+			<classifier>natives-linux</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.lwjgl</groupId>
 			<artifactId>lwjgl-bgfx</artifactId>
-			<classifier>natives-macos</classifier>
+			<classifier>natives-linux</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.lwjgl</groupId>
 			<artifactId>lwjgl-glfw</artifactId>
-			<classifier>natives-macos</classifier>
+			<classifier>natives-linux</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.lwjgl</groupId>
 			<artifactId>lwjgl-nanovg</artifactId>
-			<classifier>natives-macos</classifier>
+			<classifier>natives-linux</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.lwjgl</groupId>
 			<artifactId>lwjgl-nuklear</artifactId>
-			<classifier>natives-macos</classifier>
+			<classifier>natives-linux</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.lwjgl</groupId>
 			<artifactId>lwjgl-openal</artifactId>
-			<classifier>natives-macos</classifier>
+			<classifier>natives-linux</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.lwjgl</groupId>
 			<artifactId>lwjgl-shaderc</artifactId>
-			<classifier>natives-macos</classifier>
+			<classifier>natives-linux</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.lwjgl</groupId>
@@ -277,22 +277,22 @@
 		<dependency>
 			<groupId>org.lwjgl</groupId>
 			<artifactId>lwjgl-opengl</artifactId>
-			<classifier>natives-macos</classifier>
+			<classifier>natives-linux</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.lwjgl</groupId>
 			<artifactId>lwjgl-openvr</artifactId>
-			<classifier>natives-macos</classifier>
+			<classifier>natives-linux</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.lwjgl</groupId>
 			<artifactId>lwjgl-par</artifactId>
-			<classifier>natives-macos</classifier>
+			<classifier>natives-linux</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.lwjgl</groupId>
 			<artifactId>lwjgl-stb</artifactId>
-			<classifier>natives-macos</classifier>
+			<classifier>natives-linux</classifier>
 		</dependency>
 		<dependency>
 			<groupId>it.unimi.dsi</groupId>
