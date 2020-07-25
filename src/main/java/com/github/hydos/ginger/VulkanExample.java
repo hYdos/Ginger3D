@@ -140,6 +140,15 @@ public class VulkanExample {
             view = new Matrix4f();
             proj = new Matrix4f();
         }
+
+        public UniformBufferObject(VKRenderObject renderObject) {
+            model = new Matrix4f();
+            view = new Matrix4f();
+            proj = new Matrix4f();
+            if(renderObject != null){
+                model.translate(renderObject.position);
+            }
+        }
     }
 
 }

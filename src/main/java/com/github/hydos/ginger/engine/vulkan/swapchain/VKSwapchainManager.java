@@ -40,8 +40,10 @@ public class VKSwapchainManager {
         vkDestroyImage(VKVariables.device, VKVariables.depthImage, null);
         vkFreeMemory(VKVariables.device, VKVariables.depthImageMemory, null);
 
-        VKVariables.uniformBuffers.forEach(ubo -> vkDestroyBuffer(VKVariables.device, ubo, null));
-        VKVariables.uniformBuffersMemory.forEach(uboMemory -> vkFreeMemory(VKVariables.device, uboMemory, null));
+        for(VKRenderObject object : GingerVK.getInstance().entityRenderer.entities){
+            object.uniformBuffers.forEach(ubo -> vkDestroyBuffer(VKVariables.device, ubo, null));
+            object.uniformBuffersMemory.forEach(uboMemory -> vkFreeMemory(VKVariables.device, uboMemory, null));
+        }
 
         vkDestroyDescriptorPool(VKVariables.device, VKVariables.descriptorPool, null);
 
@@ -162,7 +164,7 @@ public class VKSwapchainManager {
         VKUtils.createColorResources();
         VKUtils.createDepthResources();
         VKUtils.createFramebuffers();
-        VKUtils.createUniformBuffers();
+        VKUtils.createUniformBuffers(entityRenderer.entities);
         VKUtils.createDescriptorPool();
         VKUtils.createDescriptorSets(entityRenderer.entities);
         CommandBufferManager.createCommandBuffers();

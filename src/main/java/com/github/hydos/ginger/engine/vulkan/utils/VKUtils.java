@@ -1,5 +1,6 @@
 package com.github.hydos.ginger.engine.vulkan.utils;
 
+import com.github.hydos.ginger.GingerVK;
 import com.github.hydos.ginger.VulkanExample;
 import com.github.hydos.ginger.VulkanExample.QueueFamilyIndices;
 import com.github.hydos.ginger.VulkanExample.SwapChainSupportDetails;
@@ -452,12 +453,14 @@ public class VKUtils {
     }
 
     public static void createDescriptorSets(List<VKRenderObject> objects) {
-        createDescriptorSet(objects.get(0));
+        for (VKRenderObject object : objects) {
+            createDescriptorSet(object);
+        }
     }
 
+    //FIXME: TODO: RAMIDZKH: DONOW:
     public static void createDescriptorSet(VKRenderObject object) {
         try (MemoryStack stack = stackPush()) {
-
             LongBuffer layouts = stack.mallocLong(VKVariables.swapChainImages.size());
             for (int i = 0; i < layouts.capacity(); i++) {
                 layouts.put(i, VKVariables.descriptorSetLayout);
@@ -486,7 +489,6 @@ public class VKUtils {
             imageInfo.sampler(VKVariables.textureSampler);
 
             VkWriteDescriptorSet.Buffer descriptorWrites = VkWriteDescriptorSet.callocStack(2, stack);
-
             VkWriteDescriptorSet uboDescriptorWrite = descriptorWrites.get(0);
             uboDescriptorWrite.sType(VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET);
             uboDescriptorWrite.dstBinding(0);
@@ -507,7 +509,7 @@ public class VKUtils {
 
                 long descriptorSet = pDescriptorSets.get(i);
 
-                bufferInfo.buffer(VKVariables.uniformBuffers.get(i));
+                bufferInfo.buffer(object.uniformBuffers.get(i));
 
                 uboDescriptorWrite.dstSet(descriptorSet);
                 samplerDescriptorWrite.dstSet(descriptorSet);
@@ -719,27 +721,22 @@ public class VKUtils {
         }
     }
 
-    public static void createUniformBuffers() {
+    public static void createUniformBuffers(List<VKRenderObject> entities) {
+        for (VKRenderObject object : entities) {
+            try (MemoryStack stack = stackPush()) {
+                object.uniformBuffers = new ArrayList<>(VKVariables.swapChainImages.size());
+                object.uniformBuffersMemory = new ArrayList<>(VKVariables.swapChainImages.size());
 
-        try (MemoryStack stack = stackPush()) {
+                LongBuffer pBuffer = stack.mallocLong(1);
+                LongBuffer pBufferMemory = stack.mallocLong(1);
 
-            VKVariables.uniformBuffers = new ArrayList<>(VKVariables.swapChainImages.size());
-            VKVariables.uniformBuffersMemory = new ArrayList<>(VKVariables.swapChainImages.size());
+                for (int i = 0; i < VKVariables.swapChainImages.size(); i++) {
+                    VKBufferUtils.createBuffer(UniformBufferObject.SIZEOF, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, pBuffer, pBufferMemory);
 
-            LongBuffer pBuffer = stack.mallocLong(1);
-            LongBuffer pBufferMemory = stack.mallocLong(1);
-
-            for (int i = 0; i < VKVariables.swapChainImages.size(); i++) {
-                VKBufferUtils.createBuffer(UniformBufferObject.SIZEOF,
-                        VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-                        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-                        pBuffer,
-                        pBufferMemory);
-
-                VKVariables.uniformBuffers.add(pBuffer.get(0));
-                VKVariables.uniformBuffersMemory.add(pBufferMemory.get(0));
+                    object.uniformBuffers.add(pBuffer.get(0));
+                    object.uniformBuffersMemory.add(pBufferMemory.get(0));
+                }
             }
-
         }
     }
 
@@ -858,7 +855,11 @@ public class VKUtils {
 
         try (MemoryStack stack = stackPush()) {
 
-            UniformBufferObject ubo = new UniformBufferObject();
+            UniformBufferObject ubo = new UniformBufferObject(renderObject);
+
+            //FIXME: tmp until ubo updating fixed
+            VKRenderObject vkRenderObject = GingerVK.getInstance().entityRenderer.entities.get(0);
+
             if (Window.isKeyDown(GLFW.GLFW_KEY_W))
                 ubo.model.rotate((float) (glfwGetTime() * Math.toRadians(90)), 0.0f, 0.0f, 1.0f);
             ubo.view.lookAt(2.0f, 2.0f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
@@ -867,11 +868,11 @@ public class VKUtils {
             ubo.proj.m11(ubo.proj.m11() * -1);
 
             PointerBuffer data = stack.mallocPointer(1);
-            vkMapMemory(VKVariables.device, VKVariables.uniformBuffersMemory.get(currentImage), 0, UniformBufferObject.SIZEOF, 0, data);
+            vkMapMemory(VKVariables.device, vkRenderObject.uniformBuffersMemory.get(currentImage), 0, UniformBufferObject.SIZEOF, 0, data);
             {
                 putUBOInMemory(data.getByteBuffer(0, UniformBufferObject.SIZEOF), ubo);
             }
-            vkUnmapMemory(VKVariables.device, VKVariables.uniformBuffersMemory.get(currentImage));
+            vkUnmapMemory(VKVariables.device, vkRenderObject.uniformBuffersMemory.get(currentImage));
         }
     }
 

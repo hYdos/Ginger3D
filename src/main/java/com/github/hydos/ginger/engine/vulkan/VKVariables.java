@@ -60,9 +60,6 @@ public class VKVariables {
     public static long textureImageView;
     public static long textureSampler;
 
-    public static List<Long> uniformBuffers;//FIXME: may be the answer to all problems
-    public static List<Long> uniformBuffersMemory;
-
     public static List<VkCommandBuffer> commandBuffers;
 
     public static List<Frame> inFlightFrames;
